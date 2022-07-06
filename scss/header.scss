@@ -1,0 +1,52 @@
+@import 'colors';
+
+@mixin button-view {
+    border: none;
+    border-radius: 40px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.header {
+    position: fixed;
+    z-index: 1;
+    background-color: $bgc-color;
+    color: $btn2-color;
+    height: 75px;
+    width: 100%;
+    font-weight: bold;
+    font-size: 35px;
+    text-align: center;
+    line-height: 65px;
+    display: flex;
+    flex-wrap: nowrap;
+
+    &__logo {
+        flex: 1;
+    }
+
+    &__buttons {
+        flex: 3;
+    }
+
+    &__button {
+        @include button-view;
+        background-color: $btn-color;
+        width: 100px;
+        height: 35px;
+        margin: 0 20px;
+    }
+
+    &__sign-in {
+        @include button-view;
+        background-color: $btn2-color;
+        color: $bgc-color;
+        font-size: 18px;
+        width: 140px;
+        height: 45px;
+    }
+
+    &__login {
+        flex: 1;
+    }
+}

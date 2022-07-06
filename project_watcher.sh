@@ -1,0 +1,1 @@
+sass --watch ./scss/style.scss:./mau_mau/static/css/style.css
