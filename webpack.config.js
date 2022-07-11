@@ -6,7 +6,8 @@ module.exports = {
     watch: true,
 
     entry: {
-        maumau: "./typescript/mau-mau.ts"
+        maumau: "./typescript/mau-mau.ts",
+        deck: "./typescript/deck.ts"
     },
     output: {
         filename: "[name].js", 

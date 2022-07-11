@@ -23,7 +23,7 @@ class Deck:
     def generate_cards(number_of_cards: int, already_generated: set) -> list:
         new_cards = []
         while len(new_cards) < number_of_cards and len(already_generated) < 32:
-            card = Card(random.randint(0, 8) * 112, random.randint(0, 8) * 187)
+            card = Card(random.randint(0, 7) * 112, random.randint(0, 3) * 187)
             if card not in already_generated:
                 new_cards.append(card)
                 already_generated.add(card)
