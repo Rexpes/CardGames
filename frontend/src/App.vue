@@ -1,26 +1,23 @@
 <template>
-  <div id="app">
-    <testcomponent />
-  </div>
+  <img alt="Vue logo" src="./assets/logo.png">
+  <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
 </template>
 
-<script>
-import testcomponent from './components/testcomponent'
+<script lang="ts">
+import { Options, Vue } from 'vue-class-component';
+import HelloWorld from './components/HelloWorld.vue';
 
-export default {
-  name: 'App',
+@Options({
   components: {
-    testcomponent
-  }
-}
-
-// sessionStorage.setItem("key", "value") // TODO this will be the way of storing game data
-
+    HelloWorld,
+  },
+})
+export default class App extends Vue {}
 </script>
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
