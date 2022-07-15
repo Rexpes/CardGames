@@ -1,4 +1,6 @@
 import { createApp } from 'vue'
-import App from './App.vue'
+import Vue from 'vue'
+import CardGames from './CardGames.vue'
+import '/src/assets/css/style.css'
 
-createApp(App).mount('#app')
+createApp(CardGames).mount('#app')

@@ -1,1 +1,1 @@
-sass --watch ./scss/style.scss:./mau_mau/static/css/style.css
+sass --watch ./scss/style.scss:./frontend/src/assets/css/style.css
