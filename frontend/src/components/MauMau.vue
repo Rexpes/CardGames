@@ -3,11 +3,9 @@
         <div class="content__selection-box">
             <div class="gameboard">
                 <div class="gameboard__cardbox">
-                    {% for opponentCard in opponentCards %}
-                        <div class="card-edge">
-                            <div class="invisiblecard" style="background-position: {{ opponentCard.x }}px {{ opponentCard.y }}px;"></div>
-                        </div>
-                    {% endfor %}
+                    <div class="card-edge">
+                        <div class="invisiblecard" style="background-position: {{ opponentCard.x }}px {{ opponentCard.y }}px;"></div>
+                    </div>
                 </div>
                 <div class="gameboard__cardbox" style="width: 1050px; display: flexbox;">
                     <div class="gameboard__talon">
@@ -17,18 +15,16 @@
                     <div class="gameboard__cardbox" style="width: 130px; margin-left: 400px;">
                         <div class="card-edge">
                             <div class="invisiblecard">
-                                <h1>{{ deck|length }}</h1>
+                                <h1>Missing Deck</h1>
                             </div>
                         </div>
                     </div>
 
                 </div>
                 <div class="gameboard__cardbox">
-                    {% for playerCard in playerCards %}
-                        <div class="card-edge">
-                            <div class="visiblecard" style="background-position: {{ playerCard.x }}px {{ playerCard.y }}px;"></div>
-                        </div>
-                    {% endfor %}
+                    <div class="card-edge">
+                        <div class="visiblecard" style="background-position: {{ playerCard.x }}px {{ playerCard.y }}px;"></div>
+                    </div>
                 </div>
             </div>
         </div>

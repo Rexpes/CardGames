@@ -2,7 +2,7 @@
     <header class="header">
         <div class="header__logo">Logo</div>
         <div class="header__buttons">
-            <a href="/"><button class="header__button">Home</button></a>
+            <router-link to="/"><button class="header__button">Home</button></router-link>
             <button class="header__button">Games</button>
             <button class="header__button">About us</button>
         </div>
