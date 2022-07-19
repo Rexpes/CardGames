@@ -11,3 +11,8 @@
         </div>
     </header>
 </template>
+<script>
+export default {
+    name: "HeaderStructure"
+}
+</script>
