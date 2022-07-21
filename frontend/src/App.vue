@@ -3,17 +3,15 @@
     <HeaderStructure></HeaderStructure>
     <router-view/>
 </template>
-
 <script>
 import HeaderStructure from "@/components/HeaderStructure";
 
 export default {
-    name: "BaseApp",
+  name: "BaseApp",
 
-    components: {
-        HeaderStructure
-    }
+  components: {
+      HeaderStructure
+  },
 }
 </script>
-
 <style lang="scss" scoped></style>

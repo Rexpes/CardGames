@@ -1,0 +1,1 @@
+let MAU_MAU_NUMBER_OF_CARDS = 32
