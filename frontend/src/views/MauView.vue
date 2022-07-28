@@ -7,8 +7,13 @@
             <Card :is-visible="false" :card="card" />
           </div>
         </div>
-        <div class="gameboard__talon">
-          <b style="color: white;">Odhazovací balíček</b>
+        <div class="gameboard__cardRow">
+          <div class="gameboard__talon">
+              <b style="color: white;">Odhazovací balíček</b>
+          </div>
+          <div class="gameboard__deck">
+            <Card :is-visible="false" :card="deck.deck" />
+          </div>
         </div>
         <div class="gameboard__cardRow">
           <div v-for="card in deck.playerCards" :key="card.id">

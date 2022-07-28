@@ -6,13 +6,14 @@
   </div>
 </template>
 <script>
+
 export default {
   name: "CardComponent",
 
   props: {
     isVisible: Boolean,
     card: {
-      type: Object,
+      type: [Object, Array],
       required: true
     }
   },
