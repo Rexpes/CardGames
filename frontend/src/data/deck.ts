@@ -5,6 +5,7 @@ export class Deck {
     public playerCards: Card[] = [];
     public opponentCards: Card[] = [];
     public deck: Card[] = [];
+    public playedCards: Card[] = [];
 
     private static alreadyGenerated: Map<string, Card>;
     private static cardRowValues = [14, 13, 12, 11, 10, 9, 8, 7];
@@ -12,13 +13,14 @@ export class Deck {
     private static cardWidth = 112;
     private static cardHeight = 187;
 
-    static generateDeck(numberOfCards: number): Deck {
+    static generateDeck(): Deck {
         this.alreadyGenerated = new Map();
         const deck = new Deck();
 
         deck.playerCards = Array.from(this.generateCards(4));
         deck.opponentCards = Array.from(this.generateCards(4));
-        deck.deck = Array.from(this.generateCards(24));
+        deck.deck = Array.from(this.generateCards(23));
+        deck.playedCards = Array.from(this.generateCards(1));
 
         return deck;
     }
