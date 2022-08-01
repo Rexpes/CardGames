@@ -79,10 +79,15 @@
 }
 .gameboard__talon {
   width: 130px;
-  margin-left: 575px;
+}
+.gameboard__cardRow {
+  display: flex;
+  justify-content: center;
+  height: 215px;
 }
 .gameboard__deck {
-  margin-left: 450px;
+  position: absolute;
+  right: 0px;
 }
 .gameboard__cardbox {
   justify-content: center;
