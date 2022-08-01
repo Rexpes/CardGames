@@ -1,0 +1,138 @@
+.header {
+  position: fixed;
+  z-index: 1;
+  background-color: #143601;
+  color: #AAD576;
+  height: 75px;
+  width: 100%;
+  font-weight: bold;
+  font-size: 35px;
+  text-align: center;
+  line-height: 65px;
+  display: flex;
+  flex-wrap: nowrap;
+}
+.header__logo {
+  flex: 1;
+}
+.header__buttons {
+  flex: 3;
+}
+.header__button {
+  border: none;
+  border-radius: 40px;
+  font-weight: bold;
+  cursor: pointer;
+  background-color: #73A942;
+  width: 100px;
+  height: 35px;
+  margin: 0 20px;
+}
+.header__sign-in {
+  border: none;
+  border-radius: 40px;
+  font-weight: bold;
+  cursor: pointer;
+  background-color: #AAD576;
+  color: #143601;
+  font-size: 18px;
+  width: 140px;
+  height: 45px;
+}
+.header__login {
+  flex: 1;
+}
+
+.content {
+  color: #245501;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
+  text-align: center;
+}
+.content__selection-box {
+  position: absolute;
+  width: 60%;
+  margin-top: 100px;
+  padding-bottom: 20px;
+  justify-content: center;
+  display: flex;
+  flex-wrap: wrap;
+}
+.content__selection-box__select {
+  background-color: rgb(255, 34, 207);
+  margin: 10px 20px 10px 20px;
+  border-radius: 25px;
+  height: 400px;
+  width: 250px;
+  line-height: 380px;
+  cursor: pointer;
+}
+
+.gameboard {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.gameboard__talon {
+  width: 130px;
+}
+.gameboard__cardRow {
+  display: flex;
+  justify-content: center;
+  height: 215px;
+}
+.gameboard__deck {
+  position: absolute;
+  right: 0px;
+}
+.gameboard__cardbox {
+  justify-content: center;
+  display: flex;
+  flex: 1;
+  margin-bottom: 10px;
+}
+.gameboard__cardbox .card-edge {
+  background-color: white;
+  padding: 8px;
+  margin-right: 10px;
+  border-radius: 10px;
+}
+.gameboard__cardbox .card-edge > .invisiblecard, .gameboard__cardbox .card-edge .visiblecard {
+  width: 112px;
+  height: 187px;
+  overflow: hidden;
+  background-image: url("/src/assets/images/card_rub.jpg");
+}
+.gameboard__cardbox .card-edge > .visiblecard {
+  background-image: url("/src/assets/images/Maumaucards.png");
+}
+*,
+html {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+html {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-attachment: fixed;
+  background-image: url("/src/assets/images/wood.jpg");
+  width: 100%;
+  height: 100%;
+}
+
+p {
+  font-size: 64px;
+}
+
+/*# sourceMappingURL=style.css.map */

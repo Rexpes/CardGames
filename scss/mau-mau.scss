@@ -6,7 +6,17 @@
 
     &__talon {
         width: 130px;
-        margin-left: 385px;
+    }
+
+    &__cardRow {
+        display: flex;
+        justify-content: center;
+        height: 215px;
+    }
+
+    &__deck {
+        position: absolute;
+        right: 0px;
     }
 
     &__cardbox {
@@ -25,11 +35,11 @@
                 width: 112px;
                 height: 187px;
                 overflow: hidden;
-                background-image: url('/static/images/card_rub.jpg');
+                background-image: url('/src/assets/images/card_rub.jpg');
             }
 
             > .visiblecard {
-                background-image: url('/static/images/Maumaucards.png');
+                background-image: url('/src/assets/images/Maumaucards.png');
             }
 
             > .invisiblecard {
