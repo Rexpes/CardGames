@@ -8,10 +8,12 @@ export class Deck {
     public playedCards: Card[] = [];
 
     private static alreadyGenerated: Map<string, Card>;
-    private static cardRowValues = [14, 13, 12, 11, 10, 9, 8, 7];
-    private static cardColumnTypes = [CardTypes.HEARTS, CardTypes.BELLS, CardTypes.LEAVES, CardTypes.ACORNS];
+    private static cardRowValues = [7, 8, 9, 10, 11, 12, 13, 14];
+    private static cardColumnTypes = [CardTypes.ACORNS, CardTypes.LEAVES, CardTypes.BELLS, CardTypes.HEARTS];
     private static cardWidth = 112;
+    private static maxCardWidth = 896;
     private static cardHeight = 187;
+    private static maxCardHeight = 748;
 
     static generateDeck(): Deck {
         this.alreadyGenerated = new Map();
@@ -28,13 +30,21 @@ export class Deck {
     private static generateCards(numberOfCards: number): Set<Card> {
         const newCards: Set<Card> = new Set();
         while (newCards.size < numberOfCards && this.alreadyGenerated.size < 32) {
-            const x = Math.floor(Math.random() * 8) * this.cardWidth;
-            const y = Math.floor(Math.random() * 4) * this.cardHeight;
+            let xValue = Math.floor(Math.random() * 8);
+            let yType = Math.floor(Math.random() * 4);
+            const x = xValue * this.cardWidth;
+            const y = yType * this.cardHeight;
+            if(xValue == 0) {
+                xValue = 8;
+            }
+            if(yType == 0) {
+                yType = 4;
+            }
             const card: Card = {
                 x: x,
                 y: y,
-                cardType: this.cardColumnTypes[y],
-                value: this.cardRowValues[x],
+                cardType: this.cardColumnTypes[yType-1],
+                value: this.cardRowValues[xValue-1],
             };
 
             if (!Deck.alreadyGenerated.has(JSON.stringify(card))) {
