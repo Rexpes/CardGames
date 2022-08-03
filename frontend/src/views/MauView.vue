@@ -50,8 +50,10 @@ export default {
 
   methods: {
     movePlayerCard(card, index) {
-      this.deck.playedCards.push(card);
-      this.deck.playerCards.splice(index, 1);
+      if(this.deck.playedCards[this.deck.playedCards.length-1].value == card.value || this.deck.playedCards[this.deck.playedCards.length-1].cardType == card.cardType) {
+        this.deck.playedCards.push(card);
+        this.deck.playerCards.splice(index, 1);
+      }
     },
 
     drawCard() {
