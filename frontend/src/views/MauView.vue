@@ -8,6 +8,7 @@
           </div>
         </div>
         <div class="gameboard__cardRow">
+          <div class="gameboard__typeSymbol" :style="symbolPosition" v-if="typeSymbol"></div>
           <div class="gameboard__talon" id="talon">
             <div v-for="card in deck.playedCards" :key="card.id">
               <Card style="position: absolute;" :is-visible="true" :card="card" />
@@ -21,6 +22,15 @@
           <div v-for="(card, index) in deck.playerCards" :key="index" @click="movePlayerCard(card, index)">
             <Card :is-visible="true" :card="card" />
           </div>
+        </div>
+      </div>
+      <div class="gameboard__changing-type" v-if="dama">
+        Na co měníš?
+        <div class="gameboard__types">
+          <div class="gameboard__type" style="background-position: 0px 0px;" @click="changeType(0)"></div>
+          <div class="gameboard__type" style="background-position: 80px 0px;" @click="changeType(1)"></div>
+          <div class="gameboard__type" style="background-position: 160px 0px;" @click="changeType(2)"></div>
+          <div class="gameboard__type" style="background-position: 240px 0px;" @click="changeType(3)"></div>
         </div>
       </div>
     </div>
@@ -45,14 +55,21 @@ export default {
     return {
       deck: deck,
       cardsInDeck: true,
+      dama: false,
+      typeSymbol: false,
+      symbolPos: 0,
     }
   },
 
   methods: {
     movePlayerCard(card, index) {
-      if(this.deck.playedCards[this.deck.playedCards.length-1].value == card.value || this.deck.playedCards[this.deck.playedCards.length-1].cardType == card.cardType) {
+      if(this.deck.playedCards[this.deck.playedCards.length-1].value == card.value || this.deck.playedCards[this.deck.playedCards.length-1].cardType == card.cardType || card.value == 12) {
         this.deck.playedCards.push(card);
         this.deck.playerCards.splice(index, 1);
+        this.typeSymbol = false;
+      }
+      if(card.value == 12) {
+        this.dama = true;
       }
     },
 
@@ -64,8 +81,45 @@ export default {
       } else {
         this.cardsInDeck = false;
       }
+    },
+
+    changeType(type) {
+        this.dama = false;
+        this.deck.playedCards[this.deck.playedCards.length-1].cardType = type;
+        this.symbolPos = type*80;
+        this.typeSymbol = true;
     }
   },
+
+  computed: {
+    symbolPosition() {
+        return 'background-position: ' + this.symbolPos + 'px 0px;';
+    }
+  }
 }
 </script>
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+
+    .gameboard__typeSymbol {
+        position: absolute;
+        left: 250px;
+        margin-top: 55px;
+        width: 80px;
+        height: 80px;
+        border-radius: 5px;
+        background-image: url('../assets/images/CardTypes.png');
+    }
+
+    .gameboard__types {
+        display: flex;
+        justify-content: center;
+        margin-top: 15px;
+    }
+    .gameboard__type {
+        width: 80px;
+        height: 80px;
+        margin: 0px 10px 0px 10px;
+        border-radius: 5px;
+        background-image: url('../assets/images/CardTypes.png');
+    }
+</style>
