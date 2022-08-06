@@ -121,8 +121,8 @@ export default {
     },
 
     takeCardFromDeck(pushTo) {
-      pushTo.push(this.cards.deck.length - 1);
-      this.cards.deck.splice(0, 1);
+      pushTo.push(this.cards.deck[0]);
+      this.cards.deck.splice(this.cards.deck[0], 1);
     },
 
     changeType(type) {
