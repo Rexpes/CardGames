@@ -71,6 +71,13 @@ export default {
       if(card.value == 12) {
         this.dama = true;
       }
+      if(card.value == 7) {
+        let i = 0;
+        for(this.i; i < 2; i++) {
+          this.deck.opponentCards.push(this.deck.deck[0]);
+          this.deck.deck.splice(0, 1);
+        }
+      }
     },
 
     drawCard() {
