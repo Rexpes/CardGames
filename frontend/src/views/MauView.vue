@@ -58,43 +58,80 @@ export default {
       dama: false,
       typeSymbol: false,
       symbolPos: 0,
+      playerTurn: true,
     }
   },
 
   methods: {
     movePlayerCard(card, index) {
-      if(this.deck.playedCards[this.deck.playedCards.length-1].value == card.value || this.deck.playedCards[this.deck.playedCards.length-1].cardType == card.cardType || card.value == 12) {
+      if((this.deck.playedCards[this.deck.playedCards.length-1].value == card.value || this.deck.playedCards[this.deck.playedCards.length-1].cardType == card.cardType || card.value == 12) && this.playerTurn) {
         this.deck.playedCards.push(card);
         this.deck.playerCards.splice(index, 1);
+
         this.typeSymbol = false;
+
+        if(card.value == 7) {
+            for(let i = 0; i < 2; i++) {
+            this.deck.opponentCards.push(this.deck.deck[0]);
+            this.deck.deck.splice(0, 1);
+          }
+        }
+
+        if(card.value == 12) {
+          this.dama = true;
+        } else {
+          this.playerTurn = false;
+          this.moveOpponentCard();
+        }
       }
-      if(card.value == 12) {
-        this.dama = true;
-      }
-      if(card.value == 7) {
+    },
+
+    moveOpponentCard() {
+      if(this.playerTurn == false) {
         let i = 0;
-        for(this.i; i < 2; i++) {
+        while(i < this.deck.opponentCards.length && this.playerTurn == false) {
+          if(this.deck.opponentCards[i].value == this.deck.playedCards[this.deck.playedCards.length-1].value || this.deck.opponentCards[i].cardType == this.deck.playedCards[this.deck.playedCards.length-1].cardType || this.deck.opponentCards[i].value == 12) {
+            this.deck.playedCards.push(this.deck.opponentCards[i]);
+            this.deck.opponentCards.splice(i, 1);
+
+            this.playerTurn = true;
+          }
+          i++;
+        }
+
+        if(this.playerTurn == false) {
           this.deck.opponentCards.push(this.deck.deck[0]);
           this.deck.deck.splice(0, 1);
+
+          this.playerTurn = true;
         }
+
       }
     },
 
     drawCard() {
       if (this.deck.deck.length > 0) {
         this.cardsInDeck = true;
-        this.deck.playerCards.push(this.deck.deck[0]);
-        this.deck.deck.splice(0, 1);
-      } else {
-        this.cardsInDeck = false;
+        if (this.playerTurn) {
+          this.deck.playerCards.push(this.deck.deck[0]);
+          this.deck.deck.splice(0, 1);
+
+          this.playerTurn = false;
+          this.moveOpponentCard();
+        }
+        if (this.deck.deck.length == 0) {
+          this.cardsInDeck = false;
+        }
       }
     },
 
     changeType(type) {
-        this.dama = false;
-        this.deck.playedCards[this.deck.playedCards.length-1].cardType = type;
-        this.symbolPos = type*80;
-        this.typeSymbol = true;
+      this.dama = false;
+      this.deck.playedCards[this.deck.playedCards.length-1].cardType = type;
+      this.symbolPos = type*80;
+      this.typeSymbol = true;
+      this.playerTurn = false;
+      this.moveOpponentCard();
     }
   },
 
