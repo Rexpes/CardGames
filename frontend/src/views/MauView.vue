@@ -95,6 +95,8 @@ export default {
       while (i < this.cards.opponentCards.length) {
         let lastPlayedCard = this.cards.playedCards[this.cards.playedCards.length-1];
         if (this.cards.opponentCards[i].value === lastPlayedCard.value || this.cards.opponentCards[i].cardType === lastPlayedCard.cardType || this.cards.opponentCards[i].value === 12) {
+          this.cards.playedCards.push(this.cards.opponentCards[i]);
+
           if(this.cards.opponentCards[i].value === 7) {
             for(let i = 0; i < 2; i++) {
               this.takeCardFromDeck(this.cards.playerCards);
@@ -107,7 +109,6 @@ export default {
             }
           }
 
-          this.cards.playedCards.push(this.cards.opponentCards[i]);
           this.cards.opponentCards.splice(i, 1);
 
           this.gameState.playerTurn = true;
