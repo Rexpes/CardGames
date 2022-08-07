@@ -81,6 +81,10 @@ export default {
           }
         } else if(card.value === 12) {
           this.queen = true;
+        } else if (card.value === 13 && card.cardType === 2) {
+          for (let i = 0; i < 3; i++) {
+            this.takeCardFromDeck(this.cards.opponentCards);
+          }
         } else {
           this.gameState.playerTurn = false;
           this.moveOpponentCard();
@@ -106,6 +110,11 @@ export default {
               this.opponentChangeType(this.cards.opponentCards[1].cardType);
             } else {
               this.opponentChangeType(this.cards.opponentCards[0].cardType);
+            }
+          } else if (this.cards.opponentCards[i].value === 13 && this.cards.opponentCards[i].cardType === 2) {
+            console.log("AAAAA");
+            for (let i = 0; i < 3; i++) {
+              this.takeCardFromDeck(this.cards.playerCards);
             }
           }
 
