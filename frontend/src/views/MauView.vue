@@ -95,6 +95,18 @@ export default {
       while (i < this.cards.opponentCards.length) {
         let lastPlayedCard = this.cards.playedCards[this.cards.playedCards.length-1];
         if (this.cards.opponentCards[i].value === lastPlayedCard.value || this.cards.opponentCards[i].cardType === lastPlayedCard.cardType || this.cards.opponentCards[i].value === 12) {
+          if(this.cards.opponentCards[i].value === 7) {
+            for(let i = 0; i < 2; i++) {
+              this.takeCardFromDeck(this.cards.playerCards);
+            }
+          } else if (this.cards.opponentCards[i].value === 12) {
+            if(i === 0 ){
+              this.opponentChangeType(this.cards.opponentCards[1].cardType);
+            } else {
+              this.opponentChangeType(this.cards.opponentCards[0].cardType);
+            }
+          }
+
           this.cards.playedCards.push(this.cards.opponentCards[i]);
           this.cards.opponentCards.splice(i, 1);
 
@@ -132,6 +144,12 @@ export default {
       this.typeSymbol = true;
       this.gameState.playerTurn = false;
       this.moveOpponentCard();
+    },
+
+    opponentChangeType(type) {
+      this.cards.playedCards[this.cards.playedCards.length-1].cardType = type;
+      this.symbolPos = type*80;
+      this.typeSymbol = true;
     }
   },
 
