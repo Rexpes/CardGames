@@ -144,6 +144,9 @@ export default {
     },
 
     takeCardFromDeck(pushTo) {
+      if (this.cards.deck.length === 0) {
+        this.shuffleNewDeck(this.cards.playedCards);
+      }
       pushTo.push(this.cards.deck[0]);
       this.cards.deck.splice(this.cards.deck[0], 1);
     },
@@ -161,6 +164,15 @@ export default {
       this.cards.playedCards[this.cards.playedCards.length-1].cardType = type;
       this.symbolPos = type*80;
       this.typeSymbol = true;
+    },
+
+    shuffleNewDeck(cardsToShuffle) {
+      cardsToShuffle.sort(() => Math.random() - 0.5);
+      for(let i = 0; i < cardsToShuffle.length-2; i++) {
+        this.cards.deck.push(cardsToShuffle[i]);
+      }
+      this.cards.playedCards.splice(0, this.cards.playedCards.length-1);
+      console.log(this.cards.playedCards.length);
     }
   },
 
