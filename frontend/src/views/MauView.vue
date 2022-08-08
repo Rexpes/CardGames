@@ -105,14 +105,13 @@ export default {
             for(let i = 0; i < 2; i++) {
               this.takeCardFromDeck(this.cards.playerCards);
             }
-          } else if (this.cards.opponentCards[i].value === 12) {
-            if(i === 0 ){
+          } else if (this.cards.opponentCards[i].value === 12 && this.cards.opponentCards.length > 1) {
+            if (i === 0){
               this.opponentChangeType(this.cards.opponentCards[1].cardType);
             } else {
               this.opponentChangeType(this.cards.opponentCards[0].cardType);
             }
           } else if (this.cards.opponentCards[i].value === 13 && this.cards.opponentCards[i].cardType === 2) {
-            console.log("AAAAA");
             for (let i = 0; i < 3; i++) {
               this.takeCardFromDeck(this.cards.playerCards);
             }
@@ -135,7 +134,7 @@ export default {
 
     drawCard() {
       if (this.cards.deck.length > 0 && this.gameState.playerTurn) {
-        this.takeCardFromDeck(this.cards.playerCards)
+        this.takeCardFromDeck(this.cards.playerCards);
 
         this.gameState.playerTurn = false;
         this.moveOpponentCard();
