@@ -3,34 +3,34 @@
     <div class="content__selection-box">
       <div class="gameboard">
         <div class="gameboard__cardRow">
-          <div v-for="card in deck.opponentCards" :key="card.id">
+          <div v-for="card in cards.opponentCards" :key="card.id">
             <Card :is-visible="false" :card="card" />
           </div>
         </div>
         <div class="gameboard__cardRow">
           <div class="gameboard__typeSymbol" :style="symbolPosition" v-if="typeSymbol"></div>
           <div class="gameboard__talon" id="talon">
-            <div v-for="card in deck.playedCards" :key="card.id">
+            <div v-for="card in cards.playedCards" :key="card.id">
               <Card style="position: absolute;" :is-visible="true" :card="card" />
             </div>
           </div>
           <div class="gameboard__deck" @click="drawCard">
-            <Card v-if="cardsInDeck" :is-visible="false" :card="deck.deck" />
+            <Card :is-visible="false" :card="cards.deck" />
           </div>
         </div>
         <div class="gameboard__cardRow">
-          <div v-for="(card, index) in deck.playerCards" :key="index" @click="movePlayerCard(card, index)">
+          <div v-for="(card, index) in cards.playerCards" :key="index" @click="movePlayerCard(card, index)">
             <Card :is-visible="true" :card="card" />
           </div>
         </div>
       </div>
-      <div class="gameboard__changing-type" v-if="dama">
+      <div class="gameboard__changing-type" v-if="queen">
         Na co měníš?
         <div class="gameboard__types">
-          <div class="gameboard__type" style="background-position: 0px 0px;" @click="changeType(0)"></div>
-          <div class="gameboard__type" style="background-position: 80px 0px;" @click="changeType(1)"></div>
-          <div class="gameboard__type" style="background-position: 160px 0px;" @click="changeType(2)"></div>
-          <div class="gameboard__type" style="background-position: 240px 0px;" @click="changeType(3)"></div>
+          <div class="gameboard__type" style="background-position: 0 0;" @click="changeType(0)"></div>
+          <div class="gameboard__type" style="background-position: 80px 0;" @click="changeType(1)"></div>
+          <div class="gameboard__type" style="background-position: 160px 0;" @click="changeType(2)"></div>
+          <div class="gameboard__type" style="background-position: 240px 0;" @click="changeType(3)"></div>
         </div>
       </div>
     </div>
@@ -52,98 +52,138 @@ export default {
     if (!localStorage.getItem('deck')) {
       localStorage.setItem('deck', JSON.stringify(deck));
     }
+
     return {
-      deck: deck,
-      cardsInDeck: true,
-      dama: false,
+      cards: deck,
+      queen: false,
       typeSymbol: false,
       symbolPos: 0,
-      playerTurn: true,
+      gameState: {
+        playerTurn: true
+      }
     }
   },
 
   methods: {
     movePlayerCard(card, index) {
-      if((this.deck.playedCards[this.deck.playedCards.length-1].value == card.value || this.deck.playedCards[this.deck.playedCards.length-1].cardType == card.cardType || card.value == 12) && this.playerTurn) {
-        this.deck.playedCards.push(card);
-        this.deck.playerCards.splice(index, 1);
+      if (!this.gameState.playerTurn) return;
+
+      let lastPlayedCard = this.cards.playedCards[this.cards.playedCards.length - 1];
+      if (lastPlayedCard.value === card.value || lastPlayedCard.cardType === card.cardType || card.value === 12) {
+        this.cards.playedCards.push(card);
+        this.cards.playerCards.splice(index, 1);
 
         this.typeSymbol = false;
 
-        if(card.value == 7) {
-            for(let i = 0; i < 2; i++) {
-            this.deck.opponentCards.push(this.deck.deck[0]);
-            this.deck.deck.splice(0, 1);
+        if (card.value === 7) {
+          for (let i = 0; i < 2; i++) {
+            this.takeCardFromDeck(this.cards.opponentCards);
           }
-        }
-
-        if(card.value == 12) {
-          this.dama = true;
+        } else if(card.value === 12) {
+          this.queen = true;
+        } else if (card.value === 13 && card.cardType === 2) {
+          for (let i = 0; i < 3; i++) {
+            this.takeCardFromDeck(this.cards.opponentCards);
+          }
         } else {
-          this.playerTurn = false;
+          this.gameState.playerTurn = false;
           this.moveOpponentCard();
         }
       }
     },
 
     moveOpponentCard() {
-      if(this.playerTurn == false) {
-        let i = 0;
-        while(i < this.deck.opponentCards.length && this.playerTurn == false) {
-          if(this.deck.opponentCards[i].value == this.deck.playedCards[this.deck.playedCards.length-1].value || this.deck.opponentCards[i].cardType == this.deck.playedCards[this.deck.playedCards.length-1].cardType || this.deck.opponentCards[i].value == 12) {
-            this.deck.playedCards.push(this.deck.opponentCards[i]);
-            this.deck.opponentCards.splice(i, 1);
+      if (this.gameState.playerTurn) return;
 
-            this.playerTurn = true;
+      let i = 0;
+      while (i < this.cards.opponentCards.length) {
+        let lastPlayedCard = this.cards.playedCards[this.cards.playedCards.length-1];
+        if (this.cards.opponentCards[i].value === lastPlayedCard.value || this.cards.opponentCards[i].cardType === lastPlayedCard.cardType || this.cards.opponentCards[i].value === 12) {
+          this.cards.playedCards.push(this.cards.opponentCards[i]);
+
+          if(this.cards.opponentCards[i].value === 7) {
+            for(let i = 0; i < 2; i++) {
+              this.takeCardFromDeck(this.cards.playerCards);
+            }
+          } else if (this.cards.opponentCards[i].value === 12) {
+            if (this.cards.opponentCards.length === 1) {
+              this.opponentChangeType(this.cards.opponentCards[0].cardType);
+            } else if (i === 0){
+              this.opponentChangeType(this.cards.opponentCards[1].cardType);
+            } else {
+              this.opponentChangeType(this.cards.opponentCards[0].cardType);
+            }
+          } else if (this.cards.opponentCards[i].value === 13 && this.cards.opponentCards[i].cardType === 2) {
+            for (let i = 0; i < 3; i++) {
+              this.takeCardFromDeck(this.cards.playerCards);
+            }
           }
-          i++;
+
+          this.cards.opponentCards.splice(i, 1);
+
+          this.gameState.playerTurn = true;
+          break;
         }
+        i++;
+      }
 
-        if(this.playerTurn == false) {
-          this.deck.opponentCards.push(this.deck.deck[0]);
-          this.deck.deck.splice(0, 1);
+      if (!this.gameState.playerTurn) {
+        this.takeCardFromDeck(this.cards.opponentCards)
 
-          this.playerTurn = true;
-        }
-
+        this.gameState.playerTurn = true;
       }
     },
 
     drawCard() {
-      if (this.deck.deck.length > 0) {
-        this.cardsInDeck = true;
-        if (this.playerTurn) {
-          this.deck.playerCards.push(this.deck.deck[0]);
-          this.deck.deck.splice(0, 1);
+      if (this.cards.deck.length > 0 && this.gameState.playerTurn) {
+        this.takeCardFromDeck(this.cards.playerCards);
 
-          this.playerTurn = false;
-          this.moveOpponentCard();
-        }
-        if (this.deck.deck.length == 0) {
-          this.cardsInDeck = false;
-        }
+        this.gameState.playerTurn = false;
+        this.moveOpponentCard();
       }
     },
 
+    takeCardFromDeck(pushTo) {
+      if (this.cards.deck.length === 0) {
+        this.shuffleNewDeck(this.cards.playedCards);
+      }
+      pushTo.push(this.cards.deck[0]);
+      this.cards.deck.splice(this.cards.deck[0], 1);
+    },
+
     changeType(type) {
-      this.dama = false;
-      this.deck.playedCards[this.deck.playedCards.length-1].cardType = type;
+      this.queen = false;
+      this.cards.playedCards[this.cards.playedCards.length-1].cardType = type;
       this.symbolPos = type*80;
       this.typeSymbol = true;
-      this.playerTurn = false;
+      this.gameState.playerTurn = false;
       this.moveOpponentCard();
+    },
+
+    opponentChangeType(type) {
+      this.cards.playedCards[this.cards.playedCards.length-1].cardType = type;
+      this.symbolPos = type*80;
+      this.typeSymbol = true;
+    },
+
+    shuffleNewDeck(cardsToShuffle) {
+      cardsToShuffle.sort(() => Math.random() - 0.5);
+      for(let i = 0; i < cardsToShuffle.length-2; i++) {
+        this.cards.deck.push(cardsToShuffle[i]);
+      }
+      this.cards.playedCards.splice(0, this.cards.playedCards.length-1);
+      console.log(this.cards.playedCards.length);
     }
   },
 
   computed: {
     symbolPosition() {
-        return 'background-position: ' + this.symbolPos + 'px 0px;';
+        return 'background-position: ' + this.symbolPos + 'px 0;';
     }
   }
 }
 </script>
 <style scoped lang="scss">
-
     .gameboard__typeSymbol {
         position: absolute;
         left: 250px;
@@ -162,7 +202,7 @@ export default {
     .gameboard__type {
         width: 80px;
         height: 80px;
-        margin: 0px 10px 0px 10px;
+        margin: 0 10px 0 10px;
         border-radius: 5px;
         background-image: url('../assets/images/CardTypes.png');
     }
