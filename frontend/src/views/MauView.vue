@@ -135,7 +135,7 @@ export default {
     },
 
     drawCard() {
-      if (this.cards.deck.length > 0 && this.gameState.playerTurn) {
+      if (this.cards.deck.length >= 0 && this.gameState.playerTurn) {
         this.takeCardFromDeck(this.cards.playerCards);
 
         this.gameState.playerTurn = false;
@@ -172,7 +172,6 @@ export default {
         this.cards.deck.push(cardsToShuffle[i]);
       }
       this.cards.playedCards.splice(0, this.cards.playedCards.length-1);
-      console.log(this.cards.playedCards.length);
     }
   },
 
