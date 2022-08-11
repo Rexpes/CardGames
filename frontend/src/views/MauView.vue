@@ -24,13 +24,19 @@
           </div>
         </div>
       </div>
-      <div class="gameboard__changing-type" v-if="queen">
+      <div class="gameboard__choosing-table" v-if="queen">
         Na co měníš?
         <div class="gameboard__types">
           <div class="gameboard__type" style="background-position: 0 0;" @click="changeType(0)"></div>
           <div class="gameboard__type" style="background-position: 80px 0;" @click="changeType(1)"></div>
           <div class="gameboard__type" style="background-position: 160px 0;" @click="changeType(2)"></div>
           <div class="gameboard__type" style="background-position: 240px 0;" @click="changeType(3)"></div>
+        </div>
+      </div>
+      <div class="gameboard__choosing-table" v-if="ace">
+        Stojíš?
+        <div style="display: flex; justify-content: center;">
+          <div class="gameboard__ace-button" @click="aceToggle">Ano</div>
         </div>
       </div>
     </div>
@@ -56,6 +62,7 @@ export default {
     return {
       cards: deck,
       queen: false,
+      ace: false,
       typeSymbol: false,
       symbolPos: 0,
       gameState: {
@@ -68,8 +75,14 @@ export default {
     movePlayerCard(card, index) {
       if (!this.gameState.playerTurn) return;
 
+      if (this.ace === true && card.value === 14) {
+        this.cards.playedCards.push(card);
+        this.cards.playerCards.splice(index, 1);
+        this.ace = false;
+      }
+
       let lastPlayedCard = this.cards.playedCards[this.cards.playedCards.length - 1];
-      if (lastPlayedCard.value === card.value || lastPlayedCard.cardType === card.cardType || card.value === 12) {
+      if ((lastPlayedCard.value === card.value || lastPlayedCard.cardType === card.cardType || card.value === 12) && this.ace === false) {
         this.cards.playedCards.push(card);
         this.cards.playerCards.splice(index, 1);
 
@@ -81,9 +94,19 @@ export default {
           }
         } else if(card.value === 12) {
           this.queen = true;
+          this.gameState.playerTurn = false;
         } else if (card.value === 13 && card.cardType === 2) {
           for (let i = 0; i < 3; i++) {
             this.takeCardFromDeck(this.cards.opponentCards);
+          }
+        } else if(card.value === 14) {
+          for (let i = 0; i < this.cards.opponentCards.length; i++) {
+            if(this.cards.opponentCards[i].value === 14) {
+              this.cards.playedCards.push(this.cards.opponentCards[i]);
+              this.cards.opponentCards.splice(i, 1);
+              this.ace = true;
+              break;
+            }
           }
         } else {
           this.gameState.playerTurn = false;
@@ -101,7 +124,9 @@ export default {
         if (this.cards.opponentCards[i].value === lastPlayedCard.value || this.cards.opponentCards[i].cardType === lastPlayedCard.cardType || this.cards.opponentCards[i].value === 12) {
           this.cards.playedCards.push(this.cards.opponentCards[i]);
 
-          if(this.cards.opponentCards[i].value === 7) {
+          this.typeSymbol = false;
+
+          if (this.cards.opponentCards[i].value === 7) {
             for(let i = 0; i < 2; i++) {
               this.takeCardFromDeck(this.cards.playerCards);
             }
@@ -117,6 +142,9 @@ export default {
             for (let i = 0; i < 3; i++) {
               this.takeCardFromDeck(this.cards.playerCards);
             }
+          } else if (this.cards.opponentCards[i].value === 14) {
+            this.ace = true;
+            this.gameState.playerTurn = false;
           }
 
           this.cards.opponentCards.splice(i, 1);
@@ -135,7 +163,7 @@ export default {
     },
 
     drawCard() {
-      if (this.cards.deck.length >= 0 && this.gameState.playerTurn) {
+      if (this.cards.deck.length >= 0 && this.gameState.playerTurn && this.ace === false) {
         this.takeCardFromDeck(this.cards.playerCards);
 
         this.gameState.playerTurn = false;
@@ -156,7 +184,6 @@ export default {
       this.cards.playedCards[this.cards.playedCards.length-1].cardType = type;
       this.symbolPos = type*80;
       this.typeSymbol = true;
-      this.gameState.playerTurn = false;
       this.moveOpponentCard();
     },
 
@@ -168,11 +195,17 @@ export default {
 
     shuffleNewDeck(cardsToShuffle) {
       cardsToShuffle.sort(() => Math.random() - 0.5);
-      for(let i = 0; i < cardsToShuffle.length-2; i++) {
+      for (let i = 0; i < cardsToShuffle.length-2; i++) {
         this.cards.deck.push(cardsToShuffle[i]);
       }
       this.cards.playedCards.splice(0, this.cards.playedCards.length-1);
-    }
+    },
+
+    aceToggle() {
+      this.gameState.playerTurn = false;
+      this.ace = false;
+      this.moveOpponentCard();
+    },
   },
 
   computed: {
@@ -192,7 +225,6 @@ export default {
         border-radius: 5px;
         background-image: url('../assets/images/CardTypes.png');
     }
-
     .gameboard__types {
         display: flex;
         justify-content: center;
@@ -204,5 +236,26 @@ export default {
         margin: 0 10px 0 10px;
         border-radius: 5px;
         background-image: url('../assets/images/CardTypes.png');
+        cursor: pointer;
+    }
+    .gameboard__choosing-table {
+        background-color: #245501;
+        color: #AAD576;
+        position: absolute;
+        font-size: 30px;
+        padding: 20px;
+        border-radius: 15px;
+        height: 150px;
+        width: 400px;
+        top: 220px;
+        left: -250px;
+    }
+    .gameboard__ace-button {
+        background-color: #AAD576;
+        color: #143601;
+        width: 80px;
+        border-radius: 5px;
+        margin-top: 40px;
+        cursor: pointer;
     }
 </style>
