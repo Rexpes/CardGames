@@ -4,7 +4,7 @@
       <div class="gameboard">
         <div class="gameboard__cardRow">
           <div v-for="card in cards.opponentCards" :key="card.id">
-            <Card :is-visible="true" :card="card" />
+            <Card :is-visible="false" :card="card" />
           </div>
         </div>
         <div class="gameboard__cardRow">
@@ -75,8 +75,14 @@ export default {
     movePlayerCard(card, index) {
       if (!this.gameState.playerTurn) return;
 
+      if (this.ace === true && card.value === 14) {
+        this.cards.playedCards.push(card);
+        this.cards.playerCards.splice(index, 1);
+        this.ace = false;
+      }
+
       let lastPlayedCard = this.cards.playedCards[this.cards.playedCards.length - 1];
-      if (lastPlayedCard.value === card.value || lastPlayedCard.cardType === card.cardType || card.value === 12) {
+      if ((lastPlayedCard.value === card.value || lastPlayedCard.cardType === card.cardType || card.value === 12) && this.ace === false) {
         this.cards.playedCards.push(card);
         this.cards.playerCards.splice(index, 1);
 
@@ -137,8 +143,8 @@ export default {
               this.takeCardFromDeck(this.cards.playerCards);
             }
           } else if (this.cards.opponentCards[i].value === 14) {
-            this.gameState.playerTurn = false;
             this.ace = true;
+            this.gameState.playerTurn = false;
           }
 
           this.cards.opponentCards.splice(i, 1);
@@ -157,7 +163,7 @@ export default {
     },
 
     drawCard() {
-      if (this.cards.deck.length >= 0 && this.gameState.playerTurn) {
+      if (this.cards.deck.length >= 0 && this.gameState.playerTurn && this.ace === false) {
         this.takeCardFromDeck(this.cards.playerCards);
 
         this.gameState.playerTurn = false;
@@ -197,8 +203,8 @@ export default {
 
     aceToggle() {
       this.gameState.playerTurn = false;
-      this.moveOpponentCard();
       this.ace = false;
+      this.moveOpponentCard();
     },
   },
 
