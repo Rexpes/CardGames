@@ -75,14 +75,13 @@ export default {
     movePlayerCard(card, index) {
       if (!this.gameState.playerTurn) return;
 
+      let lastPlayedCard = this.cards.playedCards[this.cards.playedCards.length - 1];
+
       if (this.ace === true && card.value === 14) {
         this.cards.playedCards.push(card);
         this.cards.playerCards.splice(index, 1);
         this.ace = false;
-      }
-
-      let lastPlayedCard = this.cards.playedCards[this.cards.playedCards.length - 1];
-      if ((lastPlayedCard.value === card.value || lastPlayedCard.cardType === card.cardType || card.value === 12) && this.ace === false) {
+      } else if ((lastPlayedCard.value === card.value || lastPlayedCard.cardType === card.cardType || card.value === 12) && this.ace === false) {
         this.cards.playedCards.push(card);
         this.cards.playerCards.splice(index, 1);
 
