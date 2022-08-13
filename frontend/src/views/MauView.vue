@@ -39,6 +39,9 @@
           <div class="gameboard__ace-button" @click="aceToggle">Ano</div>
         </div>
       </div>
+      <div class="gameboard__choosing-table" style="line-height: 150px;" v-if="seven">
+        Bereš nebo hrej sedmičku!
+      </div>
     </div>
   </div>
 </template>
@@ -63,7 +66,9 @@ export default {
       cards: deck,
       queen: false,
       ace: false,
+      seven: false,
       typeSymbol: false,
+      sevenNumberOfCards: 0,
       symbolPos: 0,
       gameState: {
         playerTurn: true
@@ -77,20 +82,25 @@ export default {
 
       let lastPlayedCard = this.cards.playedCards[this.cards.playedCards.length - 1];
 
-      if (this.ace === true && card.value === 14) {
+      if (this.seven === true && card.value === 7) {
+        this.cards.playedCards.push(card);
+        this.cards.playerCards.splice(index, 1);
+        this.sevenNumberOfCards += 2;
+        this.seven = false;
+        this.sevenDraw();
+      } else if (this.ace === true && card.value === 14) {
         this.cards.playedCards.push(card);
         this.cards.playerCards.splice(index, 1);
         this.ace = false;
-      } else if ((lastPlayedCard.value === card.value || lastPlayedCard.cardType === card.cardType || card.value === 12) && this.ace === false) {
+      } else if ((lastPlayedCard.value === card.value || lastPlayedCard.cardType === card.cardType || card.value === 12) && this.ace === false && this.seven === false) {
         this.cards.playedCards.push(card);
         this.cards.playerCards.splice(index, 1);
 
         this.typeSymbol = false;
 
         if (card.value === 7) {
-          for (let i = 0; i < 2; i++) {
-            this.takeCardFromDeck(this.cards.opponentCards);
-          }
+          this.sevenNumberOfCards += 2;
+          this.sevenDraw();
         } else if(card.value === 12) {
           this.queen = true;
           this.gameState.playerTurn = false;
@@ -126,9 +136,8 @@ export default {
           this.typeSymbol = false;
 
           if (this.cards.opponentCards[i].value === 7) {
-            for(let i = 0; i < 2; i++) {
-              this.takeCardFromDeck(this.cards.playerCards);
-            }
+            this.sevenNumberOfCards += 2;
+            this.seven = true;
           } else if (this.cards.opponentCards[i].value === 12) {
             if (this.cards.opponentCards.length === 1) {
               this.opponentChangeType(this.cards.opponentCards[0].cardType);
@@ -162,9 +171,17 @@ export default {
     },
 
     drawCard() {
-      if (this.cards.deck.length >= 0 && this.gameState.playerTurn && this.ace === false) {
+      if (this.gameState.playerTurn && this.ace === false && this.seven === false) {
         this.takeCardFromDeck(this.cards.playerCards);
 
+        this.gameState.playerTurn = false;
+        this.moveOpponentCard();
+      } else if (this.gameState.playerTurn && this.ace === false) {
+        for (let i = 0; i < this.sevenNumberOfCards; i++) {
+          this.takeCardFromDeck(this.cards.playerCards);
+        }
+        this.sevenNumberOfCards = 0;
+        this.seven = false;
         this.gameState.playerTurn = false;
         this.moveOpponentCard();
       }
@@ -204,6 +221,29 @@ export default {
       this.gameState.playerTurn = false;
       this.ace = false;
       this.moveOpponentCard();
+    },
+
+    sevenDraw() {
+      let counterSeven = false;
+
+      for (let i = 0; i < this.cards.opponentCards.length; i++) {
+        if (this.cards.opponentCards[i].value === 7) {
+          this.cards.playedCards.push(this.cards.opponentCards[i]);
+          this.cards.opponentCards.splice(i, 1);
+          this.sevenNumberOfCards += 2;
+          this.seven = true;
+          this.gameState.playerTurn = true;
+          counterSeven = true;
+          break;
+        }
+      }
+
+      if (!counterSeven) {
+        for (let i = 0; i < this.sevenNumberOfCards; i++) {
+          this.takeCardFromDeck(this.cards.opponentCards);
+        }
+        this.sevenNumberOfCards = 0;
+      }
     },
   },
 
