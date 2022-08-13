@@ -4,7 +4,7 @@
       <div class="gameboard">
         <div class="gameboard__cardRow">
           <div v-for="card in cards.opponentCards" :key="card.id">
-            <Card :is-visible="true" :card="card" />
+            <Card :is-visible="false" :card="card" />
           </div>
         </div>
         <div class="gameboard__cardRow">
@@ -86,8 +86,8 @@ export default {
         this.cards.playedCards.push(card);
         this.cards.playerCards.splice(index, 1);
         this.sevenNumberOfCards += 2;
-        this.sevenDraw();
         this.seven = false;
+        this.sevenDraw();
       } else if (this.ace === true && card.value === 14) {
         this.cards.playedCards.push(card);
         this.cards.playerCards.splice(index, 1);
