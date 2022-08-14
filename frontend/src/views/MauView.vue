@@ -42,6 +42,12 @@
       <div class="gameboard__choosing-table" style="line-height: 150px;" v-if="seven">
         Bereš nebo hrej sedmičku!
       </div>
+      <div class="gameboard__win-lose" v-if="gameState.playerWin">
+        Vyhrál jsi!
+      </div>
+      <div class="gameboard__win-lose" v-if="gameState.opponentWin">
+        Prohrál jsi!
+      </div>
     </div>
   </div>
 </template>
@@ -71,7 +77,9 @@ export default {
       sevenNumberOfCards: 0,
       symbolPos: 0,
       gameState: {
-        playerTurn: true
+        playerTurn: true,
+        playerWin: false,
+        opponentWin: false
       }
     }
   },
@@ -125,7 +133,12 @@ export default {
     },
 
     moveOpponentCard() {
-      if (this.gameState.playerTurn) return;
+      if (this.gameState.playerTurn) {
+        return;
+      } else if (this.cards.playerCards.length === 0) {
+        this.gameState.playerWin = true;
+        return
+      }
 
       let i = 0;
       while (i < this.cards.opponentCards.length) {
@@ -156,6 +169,11 @@ export default {
           }
 
           this.cards.opponentCards.splice(i, 1);
+
+          if (this.cards.opponentCards.length === 0) {
+            this.gameState.opponentWin = true;
+            return;
+          }
 
           this.gameState.playerTurn = true;
           break;
@@ -288,6 +306,18 @@ export default {
         width: 400px;
         top: 220px;
         left: -250px;
+    }
+    .gameboard__win-lose {
+        background-color: #245501;
+        color: #AAD576;
+        position: absolute;
+        font-size: 30px;
+        padding: 20px;
+        border-radius: 15px;
+        height: 150px;
+        width: 400px;
+        top: 220px;
+        line-height: 150px;
     }
     .gameboard__ace-button {
         background-color: #AAD576;
