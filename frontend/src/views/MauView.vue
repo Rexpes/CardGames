@@ -133,11 +133,11 @@ export default {
     },
 
     moveOpponentCard() {
-      if (this.gameState.playerTurn) {
+      this.playerWinCheck();
+
+      if (this.gameState.playerTurn || this.gameState.playerWin) {
         return;
       }
-
-      this.playerWinCheck();
 
       let i = 0;
       while (i < this.cards.opponentCards.length) {
