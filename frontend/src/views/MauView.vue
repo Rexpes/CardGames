@@ -42,10 +42,10 @@
       <div class="gameboard__choosing-table" style="line-height: 150px;" v-if="seven">
         Bereš nebo hrej sedmičku!
       </div>
-      <div class="gameboard__win-lose" v-if="gameState.playerWin">
+      <div class="gameboard__choosing-table" style="line-height: 150px; left: -50px;" v-if="gameState.playerWin">
         Vyhrál jsi!
       </div>
-      <div class="gameboard__win-lose" v-if="gameState.opponentWin">
+      <div class="gameboard__choosing-table" style="line-height: 150px; left: -50px;" v-if="gameState.opponentWin">
         Prohrál jsi!
       </div>
     </div>
@@ -95,11 +95,18 @@ export default {
         this.cards.playerCards.splice(index, 1);
         this.sevenNumberOfCards += 2;
         this.seven = false;
-        this.sevenDraw();
+        this.playerWinCheck();
+        if (!this.gameState.playerWin) {
+          this.sevenDraw();
+        }
       } else if (this.ace === true && card.value === 14) {
         this.cards.playedCards.push(card);
         this.cards.playerCards.splice(index, 1);
         this.ace = false;
+        this.playerWinCheck();
+        if (!this.gameState.playerWin) {
+          this.opponentAceCheck();
+        }
       } else if ((lastPlayedCard.value === card.value || lastPlayedCard.cardType === card.cardType || card.value === 12) && this.ace === false && this.seven === false) {
         this.cards.playedCards.push(card);
         this.cards.playerCards.splice(index, 1);
@@ -108,7 +115,10 @@ export default {
 
         if (card.value === 7) {
           this.sevenNumberOfCards += 2;
-          this.sevenDraw();
+          this.playerWinCheck();
+          if (!this.gameState.playerWin) {
+            this.sevenDraw();
+          }
         } else if(card.value === 12) {
           this.queen = true;
           this.gameState.playerTurn = false;
@@ -117,13 +127,9 @@ export default {
             this.takeCardFromDeck(this.cards.opponentCards);
           }
         } else if(card.value === 14) {
-          for (let i = 0; i < this.cards.opponentCards.length; i++) {
-            if(this.cards.opponentCards[i].value === 14) {
-              this.cards.playedCards.push(this.cards.opponentCards[i]);
-              this.cards.opponentCards.splice(i, 1);
-              this.ace = true;
-              break;
-            }
+          this.playerWinCheck();
+          if (!this.gameState.playerWin) {
+            this.opponentAceCheck();
           }
         } else {
           this.gameState.playerTurn = false;
@@ -133,11 +139,10 @@ export default {
     },
 
     moveOpponentCard() {
-      if (this.gameState.playerTurn) {
+      this.playerWinCheck();
+
+      if (this.gameState.playerTurn || this.gameState.playerWin) {
         return;
-      } else if (this.cards.playerCards.length === 0) {
-        this.gameState.playerWin = true;
-        return
       }
 
       let i = 0;
@@ -150,6 +155,7 @@ export default {
 
           if (this.cards.opponentCards[i].value === 7) {
             this.sevenNumberOfCards += 2;
+            this.opponentWinCheck();
             this.seven = true;
           } else if (this.cards.opponentCards[i].value === 12) {
             if (this.cards.opponentCards.length === 1) {
@@ -170,18 +176,14 @@ export default {
 
           this.cards.opponentCards.splice(i, 1);
 
-          if (this.cards.opponentCards.length === 0) {
-            this.gameState.opponentWin = true;
-            return;
-          }
-
           this.gameState.playerTurn = true;
+          this.opponentWinCheck();
           break;
         }
         i++;
       }
 
-      if (!this.gameState.playerTurn) {
+      if (!this.gameState.playerTurn && !this.gameState.opponentWin) {
         this.takeCardFromDeck(this.cards.opponentCards)
 
         this.gameState.playerTurn = true;
@@ -189,12 +191,12 @@ export default {
     },
 
     drawCard() {
-      if (this.gameState.playerTurn && this.ace === false && this.seven === false) {
+      if (this.gameState.playerTurn && !this.gameState.playerWin && this.ace === false && this.seven === false) {
         this.takeCardFromDeck(this.cards.playerCards);
 
         this.gameState.playerTurn = false;
         this.moveOpponentCard();
-      } else if (this.gameState.playerTurn && this.ace === false) {
+      } else if (this.gameState.playerTurn && !this.gameState.playerWin && this.ace === false) {
         for (let i = 0; i < this.sevenNumberOfCards; i++) {
           this.takeCardFromDeck(this.cards.playerCards);
         }
@@ -241,6 +243,18 @@ export default {
       this.moveOpponentCard();
     },
 
+    opponentAceCheck() {
+      for (let i = 0; i < this.cards.opponentCards.length; i++) {
+        if(this.cards.opponentCards[i].value === 14) {
+          this.cards.playedCards.push(this.cards.opponentCards[i]);
+          this.cards.opponentCards.splice(i, 1);
+          this.ace = true;
+          this.opponentWinCheck();
+          break;
+        }
+      }
+    },
+
     sevenDraw() {
       let counterSeven = false;
 
@@ -256,6 +270,8 @@ export default {
         }
       }
 
+      this.opponentWinCheck();
+
       if (!counterSeven) {
         for (let i = 0; i < this.sevenNumberOfCards; i++) {
           this.takeCardFromDeck(this.cards.opponentCards);
@@ -263,6 +279,22 @@ export default {
         this.sevenNumberOfCards = 0;
       }
     },
+
+    opponentWinCheck() {
+      if (this.cards.opponentCards.length === 0) {
+        this.gameState.opponentWin = true;
+        this.gameState.playerTurn = false;
+        this.ace = false;
+        this.seven = false;
+      }
+    },
+
+    playerWinCheck() {
+      if (this.cards.playerCards.length === 0) {
+        this.gameState.playerWin = true;
+        this.gameState.playerTurn = false;
+      }
+    }
   },
 
   computed: {
@@ -306,18 +338,6 @@ export default {
         width: 400px;
         top: 220px;
         left: -250px;
-    }
-    .gameboard__win-lose {
-        background-color: #245501;
-        color: #AAD576;
-        position: absolute;
-        font-size: 30px;
-        padding: 20px;
-        border-radius: 15px;
-        height: 150px;
-        width: 400px;
-        top: 220px;
-        line-height: 150px;
     }
     .gameboard__ace-button {
         background-color: #AAD576;
