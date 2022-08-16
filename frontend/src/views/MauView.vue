@@ -42,10 +42,10 @@
       <div class="gameboard__choosing-table" style="line-height: 150px;" v-if="seven">
         Bereš nebo hrej sedmičku!
       </div>
-      <div class="gameboard__win-lose" v-if="gameState.playerWin">
+      <div class="gameboard__choosing-table" style="line-height: 150px; left: -50px;" v-if="gameState.playerWin">
         Vyhrál jsi!
       </div>
-      <div class="gameboard__win-lose" v-if="gameState.opponentWin">
+      <div class="gameboard__choosing-table" style="line-height: 150px; left: -50px;" v-if="gameState.opponentWin">
         Prohrál jsi!
       </div>
     </div>
@@ -95,7 +95,10 @@ export default {
         this.cards.playerCards.splice(index, 1);
         this.sevenNumberOfCards += 2;
         this.seven = false;
-        this.sevenDraw();
+        this.playerWinCheck();
+        if (!this.gameState.playerWin) {
+          this.sevenDraw();
+        }
       } else if (this.ace === true && card.value === 14) {
         this.cards.playedCards.push(card);
         this.cards.playerCards.splice(index, 1);
@@ -112,7 +115,10 @@ export default {
 
         if (card.value === 7) {
           this.sevenNumberOfCards += 2;
-          this.sevenDraw();
+          this.playerWinCheck();
+          if (!this.gameState.playerWin) {
+            this.sevenDraw();
+          }
         } else if(card.value === 12) {
           this.queen = true;
           this.gameState.playerTurn = false;
@@ -149,6 +155,7 @@ export default {
 
           if (this.cards.opponentCards[i].value === 7) {
             this.sevenNumberOfCards += 2;
+            this.opponentWinCheck();
             this.seven = true;
           } else if (this.cards.opponentCards[i].value === 12) {
             if (this.cards.opponentCards.length === 1) {
@@ -263,6 +270,8 @@ export default {
         }
       }
 
+      this.opponentWinCheck();
+
       if (!counterSeven) {
         for (let i = 0; i < this.sevenNumberOfCards; i++) {
           this.takeCardFromDeck(this.cards.opponentCards);
@@ -276,6 +285,7 @@ export default {
         this.gameState.opponentWin = true;
         this.gameState.playerTurn = false;
         this.ace = false;
+        this.seven = false;
       }
     },
 
@@ -328,18 +338,6 @@ export default {
         width: 400px;
         top: 220px;
         left: -250px;
-    }
-    .gameboard__win-lose {
-        background-color: #245501;
-        color: #AAD576;
-        position: absolute;
-        font-size: 30px;
-        padding: 20px;
-        border-radius: 15px;
-        height: 150px;
-        width: 400px;
-        top: 220px;
-        line-height: 150px;
     }
     .gameboard__ace-button {
         background-color: #AAD576;
