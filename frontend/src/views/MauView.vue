@@ -256,6 +256,8 @@ export default {
       this.king = false;
       this.gameState.opponentWin = true;
       this.gameState.playerTurn = false;
+      this.ace = false;
+      this.seven = false;
     },
 
     opponentAceCheck() {
@@ -304,6 +306,8 @@ export default {
     opponentWinCheck() {
       if (this.cards.opponentCards.length === 0) {
         this.king = true;
+        this.ace = false;
+        this.seven = false;
         if (this.cards.opponentCards.length === 0 && !this.king) {
           this.gameState.opponentWin = true;
           this.gameState.playerTurn = false;
