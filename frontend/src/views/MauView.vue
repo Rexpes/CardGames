@@ -329,7 +329,8 @@ export default {
       for (let i = 0; i < this.cards.opponentCards.length; i++) {
         if (this.cards.opponentCards[i].value === 13 && this.cards.opponentCards[i].cardType === 2) {
           this.cards.playedCards.push(this.cards.opponentCards[i]);
-          this.cards.opponentCards.splice(this.cards.opponentCards[i], 1);
+          this.cards.opponentCards.splice(i, 1);
+          this.typeSymbol = false;
           this.gameState.playerWin = false;
           this.gameState.playerTurn = true;
           this.kingDraw(this.cards.playerCards);
