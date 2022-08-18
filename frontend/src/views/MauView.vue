@@ -119,6 +119,7 @@ export default {
         this.cards.playerCards.splice(index, 1);
         this.kingDraw(this.cards.opponentCards);
         this.king = false;
+        this.playerWinCheck();
       } else if ((lastPlayedCard.value === card.value || lastPlayedCard.cardType === card.cardType || card.value === 12) && !this.ace && !this.seven && !this.king) {
         this.cards.playedCards.push(card);
         this.cards.playerCards.splice(index, 1);
@@ -185,8 +186,8 @@ export default {
 
           this.cards.opponentCards.splice(i, 1);
 
-          this.gameState.playerTurn = true;
           this.opponentWinCheck();
+          this.gameState.playerTurn = true;
           break;
         }
         i++;
@@ -308,12 +309,6 @@ export default {
         this.king = true;
         this.ace = false;
         this.seven = false;
-        if (this.cards.opponentCards.length === 0 && !this.king) {
-          this.gameState.opponentWin = true;
-          this.gameState.playerTurn = false;
-          this.ace = false;
-          this.seven = false;
-        }
       }
     },
 
