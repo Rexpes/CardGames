@@ -9,7 +9,7 @@
         </div>
         <div class="gameboard__cardRow">
           <div class="gameboard__typeSymbol" :style="symbolPosition" v-if="typeSymbol"></div>
-          <div class="gameboard__talon" id="talon">
+          <div class="gameboard__playground">
             <div v-for="card in cards.playedCards" :key="card.id">
               <Card style="position: absolute;" :is-visible="true" :card="card" />
             </div>
@@ -19,7 +19,7 @@
           </div>
         </div>
         <div class="gameboard__cardRow">
-          <div v-for="(card, index) in cards.playerCards" :key="index" @click="movePlayerCard(card, index)">
+          <div v-for="(card, index) in cards.playerCards" :key="index" @click="playerMove(card, index)">
             <Card :is-visible="true" :card="card" />
           </div>
         </div>
@@ -60,6 +60,7 @@
 <script>
 import {Deck} from "@/data/deck";
 import Card from "@/components/CardComponent";
+import anime from 'animejs';
 
 export default {
   name: "MauView",
@@ -92,7 +93,7 @@ export default {
   },
 
   methods: {
-    movePlayerCard(card, index) {
+    playerMove(card, index) {
       if (!this.gameState.playerTurn) return;
 
       let lastPlayedCard = this.cards.playedCards[this.cards.playedCards.length - 1];
@@ -145,12 +146,12 @@ export default {
           }
         } else {
           this.gameState.playerTurn = false;
-          this.moveOpponentCard();
+          this.opponentMove();
         }
       }
     },
 
-    moveOpponentCard() {
+    opponentMove() {
       this.playerWinCheck();
 
       if (this.gameState.playerTurn || this.gameState.playerWin) {
@@ -205,7 +206,7 @@ export default {
         this.takeCardFromDeck(this.cards.playerCards);
 
         this.gameState.playerTurn = false;
-        this.moveOpponentCard();
+        this.opponentMove();
       } else if (this.gameState.playerTurn && !this.gameState.playerWin && !this.ace && !this.king) {
         for (let i = 0; i < this.sevenNumberOfCards; i++) {
           this.takeCardFromDeck(this.cards.playerCards);
@@ -213,7 +214,7 @@ export default {
         this.sevenNumberOfCards = 0;
         this.seven = false;
         this.gameState.playerTurn = false;
-        this.moveOpponentCard();
+        this.opponentMove();
       }
     },
 
@@ -230,7 +231,7 @@ export default {
       this.cards.playedCards[this.cards.playedCards.length-1].cardType = type;
       this.symbolPos = type*80;
       this.typeSymbol = true;
-      this.moveOpponentCard();
+      this.opponentMove();
     },
 
     opponentChangeType(type) {
@@ -250,7 +251,7 @@ export default {
     aceToggle() {
       this.gameState.playerTurn = false;
       this.ace = false;
-      this.moveOpponentCard();
+      this.opponentMove();
     },
 
     kingToggle() {
