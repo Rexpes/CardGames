@@ -354,7 +354,9 @@ export default {
           break;
         }
       }
-      this.gameState.playerTurn = true;
+      setTimeout(() => {
+        this.gameState.playerTurn = true;
+      }, 502);
     },
 
     sevenDraw() {
