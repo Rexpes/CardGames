@@ -30,12 +30,14 @@ export default {
     justify-content: center;
     display: flex;
     flex: 1;
-    margin-bottom: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
 
     .card-edge {
       background-color: white;
       padding: 8px;
-      margin-right: 10px;
+      margin-right: 5px;
+      margin-left: 5px;
       border-radius: 10px;
 
       .invisiblecard, .visiblecard {

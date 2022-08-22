@@ -3,13 +3,13 @@
     <div class="content__selection-box">
       <div class="gameboard">
         <div class="gameboard__cardRow">
-          <div v-for="card in cards.opponentCards" :key="card.id">
+          <div v-for="(card, index) in cards.opponentCards" :key="card.id" :id="index + 100">
             <Card :is-visible="false" :card="card" />
           </div>
         </div>
         <div class="gameboard__cardRow">
           <div class="gameboard__typeSymbol" :style="symbolPosition" v-if="typeSymbol"></div>
-          <div class="gameboard__talon" id="talon">
+          <div class="gameboard__playground" id="playground">
             <div v-for="card in cards.playedCards" :key="card.id">
               <Card style="position: absolute;" :is-visible="true" :card="card" />
             </div>
@@ -19,7 +19,7 @@
           </div>
         </div>
         <div class="gameboard__cardRow">
-          <div v-for="(card, index) in cards.playerCards" :key="index" @click="movePlayerCard(card, index)">
+          <div v-for="(card, index) in cards.playerCards" :key="index" :id="index" @click="playerMove(card, index)">
             <Card :is-visible="true" :card="card" />
           </div>
         </div>
@@ -42,10 +42,10 @@
       <div class="gameboard__choosing-table" style="line-height: 150px;" v-if="seven">
         Bereš nebo hrej sedmičku!
       </div>
-      <div class="gameboard__choosing-table" style="line-height: 150px; left: -50px;" v-if="gameState.playerWin">
+      <div class="gameboard__choosing-table" style="line-height: 150px;" v-if="gameState.playerWin">
         Vyhrál jsi!
       </div>
-      <div class="gameboard__choosing-table" style="line-height: 150px; left: -50px;" v-if="gameState.opponentWin">
+      <div class="gameboard__choosing-table" style="line-height: 150px;" v-if="gameState.opponentWin">
         Prohrál jsi!
       </div>
       <div class="gameboard__choosing-table" v-if="king">
@@ -60,6 +60,7 @@
 <script>
 import {Deck} from "@/data/deck";
 import Card from "@/components/CardComponent";
+import anime from 'animejs';
 
 export default {
   name: "MauView",
@@ -92,65 +93,110 @@ export default {
   },
 
   methods: {
-    movePlayerCard(card, index) {
+    playerMove(card, index) {
       if (!this.gameState.playerTurn) return;
 
       let lastPlayedCard = this.cards.playedCards[this.cards.playedCards.length - 1];
 
       if (this.seven && card.value === 7) {
-        this.cards.playedCards.push(card);
-        this.cards.playerCards.splice(index, 1);
-        this.sevenNumberOfCards += 2;
-        this.seven = false;
-        this.playerWinCheck();
-        if (!this.gameState.playerWin) {
-          this.sevenDraw();
-        }
-      } else if (this.ace && card.value === 14) {
-        this.cards.playedCards.push(card);
-        this.cards.playerCards.splice(index, 1);
-        this.ace = false;
-        this.playerWinCheck();
-        if (!this.gameState.playerWin) {
-          this.opponentAceCheck();
-        }
-      } else if (this.king && card.value === 13 && card.cardType === 2) {
-        this.cards.playedCards.push(card);
-        this.cards.playerCards.splice(index, 1);
-        this.kingDraw(this.cards.opponentCards);
-        this.king = false;
-        this.playerWinCheck();
-      } else if ((lastPlayedCard.value === card.value || lastPlayedCard.cardType === card.cardType || card.value === 12) && !this.ace && !this.seven && !this.king) {
-        this.cards.playedCards.push(card);
-        this.cards.playerCards.splice(index, 1);
-
-        this.typeSymbol = false;
-
-        if (card.value === 7) {
+        this.gameState.playerTurn = false;
+        this.playerCardAnimation(index);
+        setTimeout(() => {
+          this.cards.playedCards.push(card);
+          this.cards.playerCards.splice(index, 1);
           this.sevenNumberOfCards += 2;
+          this.seven = false;
           this.playerWinCheck();
           if (!this.gameState.playerWin) {
-            this.sevenDraw();
+              this.sevenDraw();
           }
-        } else if(card.value === 12) {
-          this.queen = true;
-          this.gameState.playerTurn = false;
-        } else if (card.value === 13 && card.cardType === 2) {
-          this.kingDraw(this.cards.opponentCards);
-          this.playerWinCheck();
-        } else if(card.value === 14) {
+        }, 501);
+      } else if (this.ace && card.value === 14) {
+        this.gameState.playerTurn = false;
+        this.playerCardAnimation(index);
+        setTimeout(() => {
+          this.cards.playedCards.push(card);
+          this.cards.playerCards.splice(index, 1);
+          this.ace = false;
           this.playerWinCheck();
           if (!this.gameState.playerWin) {
             this.opponentAceCheck();
           }
-        } else {
-          this.gameState.playerTurn = false;
-          this.moveOpponentCard();
-        }
+        }, 501);
+      } else if (this.king && card.value === 13 && card.cardType === 2) {
+        this.gameState.playerTurn = false;
+        this.playerCardAnimation(index);
+        setTimeout(() => {
+          this.cards.playedCards.push(card);
+          this.cards.playerCards.splice(index, 1);
+          this.kingDraw(this.cards.opponentCards);
+          this.king = false;
+          this.gameState.playerTurn = true;
+          this.playerWinCheck();
+        }, 501);
+      } else if ((lastPlayedCard.value === card.value || lastPlayedCard.cardType === card.cardType || card.value === 12) && !this.ace && !this.seven && !this.king) {
+        this.gameState.playerTurn = false;
+        this.playerCardAnimation(index);
+
+        setTimeout(() => {
+          this.cards.playedCards.push(card);
+          this.cards.playerCards.splice(index, 1);
+
+          this.typeSymbol = false;
+
+          if (card.value === 7) {
+            this.sevenNumberOfCards += 2;
+            this.playerWinCheck();
+            if (!this.gameState.playerWin) {
+              this.sevenDraw();
+            }
+          } else if(card.value === 12) {
+            this.queen = true;
+          } else if (card.value === 13 && card.cardType === 2) {
+            this.kingDraw(this.cards.opponentCards);
+            this.gameState.playerTurn = true;
+            this.playerWinCheck();
+          } else if(card.value === 14) {
+            this.playerWinCheck();
+            if (!this.gameState.playerWin) {
+              this.opponentAceCheck();
+            }
+          } else {
+            this.opponentMove();
+          }
+        }, 501);
       }
     },
 
-    moveOpponentCard() {
+    playerCardAnimation(index) {
+      let cardId = document.getElementById(index);
+      let playground = document.getElementById('playground');
+
+      let cardRect = cardId.getBoundingClientRect();
+      let playgroundRect = playground.getBoundingClientRect();
+
+      let posX = playgroundRect.x - cardRect.x;
+      let posY = playgroundRect.y - cardRect.y;
+
+      anime({
+        targets: cardId,
+        duration: 500,
+        translateX: posX,
+        translateY: posY,
+        easing: 'easeInOutSine',
+      });
+
+      setTimeout(() => {
+        anime({
+          targets: cardId,
+          duration: 0,
+          translateX: 0,
+          translateY: 0,
+        });
+      }, 502);
+    },
+
+    opponentMove() {
       this.playerWinCheck();
 
       if (this.gameState.playerTurn || this.gameState.playerWin) {
@@ -161,43 +207,77 @@ export default {
       while (i < this.cards.opponentCards.length) {
         let lastPlayedCard = this.cards.playedCards[this.cards.playedCards.length-1];
         if (this.cards.opponentCards[i].value === lastPlayedCard.value || this.cards.opponentCards[i].cardType === lastPlayedCard.cardType || this.cards.opponentCards[i].value === 12) {
-          this.cards.playedCards.push(this.cards.opponentCards[i]);
+          this.opponentCardAnimation(i);
 
-          this.typeSymbol = false;
+          setTimeout(() => {
+            this.cards.playedCards.push(this.cards.opponentCards[i]);
 
-          if (this.cards.opponentCards[i].value === 7) {
-            this.sevenNumberOfCards += 2;
-            this.opponentWinCheck();
-            this.seven = true;
-          } else if (this.cards.opponentCards[i].value === 12) {
-            if (this.cards.opponentCards.length === 1) {
-              this.opponentChangeType(this.cards.opponentCards[0].cardType);
-            } else if (i === 0){
-              this.opponentChangeType(this.cards.opponentCards[1].cardType);
-            } else {
-              this.opponentChangeType(this.cards.opponentCards[0].cardType);
+            this.typeSymbol = false;
+
+            if (this.cards.opponentCards[i].value === 7) {
+              this.sevenNumberOfCards += 2;
+              this.opponentWinCheck();
+              this.seven = true;
+            } else if (this.cards.opponentCards[i].value === 12) {
+              if (this.cards.opponentCards.length === 1) {
+                this.opponentChangeType(this.cards.opponentCards[0].cardType);
+              } else if (i === 0){
+                this.opponentChangeType(this.cards.opponentCards[1].cardType);
+              } else {
+                this.opponentChangeType(this.cards.opponentCards[0].cardType);
+              }
+            } else if (this.cards.opponentCards[i].value === 13 && this.cards.opponentCards[i].cardType === 2) {
+              this.kingDraw(this.cards.playerCards);
+            } else if (this.cards.opponentCards[i].value === 14) {
+              this.ace = true;
+              this.gameState.playerTurn = false;
             }
-          } else if (this.cards.opponentCards[i].value === 13 && this.cards.opponentCards[i].cardType === 2) {
-            this.kingDraw(this.cards.playerCards);
-          } else if (this.cards.opponentCards[i].value === 14) {
-            this.ace = true;
-            this.gameState.playerTurn = false;
-          }
 
-          this.cards.opponentCards.splice(i, 1);
+            this.cards.opponentCards.splice(i, 1);
 
-          this.opponentWinCheck();
-          this.gameState.playerTurn = true;
+            this.opponentWinCheck();
+            this.gameState.playerTurn = true;
+          }, 502);
           break;
         }
         i++;
       }
 
-      if (!this.gameState.playerTurn && !this.gameState.opponentWin) {
-        this.takeCardFromDeck(this.cards.opponentCards)
+      setTimeout(() => {
+        if (!this.gameState.playerTurn && !this.gameState.opponentWin) {
+          this.takeCardFromDeck(this.cards.opponentCards)
 
-        this.gameState.playerTurn = true;
-      }
+          this.gameState.playerTurn = true;
+        }
+      }, 503);
+    },
+
+    opponentCardAnimation(index) {
+      let cardId = document.getElementById(index + 100);
+      let playground = document.getElementById('playground');
+
+      let cardRect = cardId.getBoundingClientRect();
+      let playgroundRect = playground.getBoundingClientRect();
+
+      let posX = playgroundRect.x - cardRect.x;
+      let posY = playgroundRect.y - cardRect.y;
+
+      anime({
+        targets: cardId,
+        duration: 500,
+        translateX: posX,
+        translateY: posY,
+        easing: 'easeInOutSine',
+      });
+
+      setTimeout(() => {
+        anime({
+          targets: cardId,
+          duration: 0,
+          translateX: 0,
+          translateY: 0,
+        });
+      }, 502);
     },
 
     drawCard() {
@@ -205,7 +285,7 @@ export default {
         this.takeCardFromDeck(this.cards.playerCards);
 
         this.gameState.playerTurn = false;
-        this.moveOpponentCard();
+        this.opponentMove();
       } else if (this.gameState.playerTurn && !this.gameState.playerWin && !this.ace && !this.king) {
         for (let i = 0; i < this.sevenNumberOfCards; i++) {
           this.takeCardFromDeck(this.cards.playerCards);
@@ -213,7 +293,7 @@ export default {
         this.sevenNumberOfCards = 0;
         this.seven = false;
         this.gameState.playerTurn = false;
-        this.moveOpponentCard();
+        this.opponentMove();
       }
     },
 
@@ -230,7 +310,7 @@ export default {
       this.cards.playedCards[this.cards.playedCards.length-1].cardType = type;
       this.symbolPos = type*80;
       this.typeSymbol = true;
-      this.moveOpponentCard();
+      this.opponentMove();
     },
 
     opponentChangeType(type) {
@@ -250,7 +330,7 @@ export default {
     aceToggle() {
       this.gameState.playerTurn = false;
       this.ace = false;
-      this.moveOpponentCard();
+      this.opponentMove();
     },
 
     kingToggle() {
@@ -264,13 +344,17 @@ export default {
     opponentAceCheck() {
       for (let i = 0; i < this.cards.opponentCards.length; i++) {
         if(this.cards.opponentCards[i].value === 14) {
-          this.cards.playedCards.push(this.cards.opponentCards[i]);
-          this.cards.opponentCards.splice(i, 1);
-          this.ace = true;
-          this.opponentWinCheck();
+          this.opponentCardAnimation(i);
+          setTimeout(() => {
+            this.cards.playedCards.push(this.cards.opponentCards[i]);
+            this.cards.opponentCards.splice(i, 1);
+            this.ace = true;
+            this.opponentWinCheck();
+          }, 501);
           break;
         }
       }
+      this.gameState.playerTurn = true;
     },
 
     sevenDraw() {
@@ -278,12 +362,15 @@ export default {
 
       for (let i = 0; i < this.cards.opponentCards.length; i++) {
         if (this.cards.opponentCards[i].value === 7) {
-          this.cards.playedCards.push(this.cards.opponentCards[i]);
-          this.cards.opponentCards.splice(i, 1);
-          this.sevenNumberOfCards += 2;
-          this.seven = true;
-          this.gameState.playerTurn = true;
           counterSeven = true;
+          this.opponentCardAnimation(i);
+          setTimeout(() => {
+            this.cards.playedCards.push(this.cards.opponentCards[i]);
+            this.cards.opponentCards.splice(i, 1);
+            this.sevenNumberOfCards += 2;
+            this.seven = true;
+            this.gameState.playerTurn = true;
+          }, 501);
           break;
         }
       }
@@ -295,6 +382,7 @@ export default {
           this.takeCardFromDeck(this.cards.opponentCards);
         }
         this.sevenNumberOfCards = 0;
+        this.gameState.playerTurn = true;
       }
     },
 
@@ -323,12 +411,15 @@ export default {
     opponentKingCheck() {
       for (let i = 0; i < this.cards.opponentCards.length; i++) {
         if (this.cards.opponentCards[i].value === 13 && this.cards.opponentCards[i].cardType === 2) {
-          this.cards.playedCards.push(this.cards.opponentCards[i]);
-          this.cards.opponentCards.splice(i, 1);
-          this.typeSymbol = false;
-          this.gameState.playerWin = false;
-          this.gameState.playerTurn = true;
-          this.kingDraw(this.cards.playerCards);
+          this.opponentCardAnimation(i);
+          setTimeout(() => {
+            this.cards.playedCards.push(this.cards.opponentCards[i]);
+            this.cards.opponentCards.splice(i, 1);
+            this.typeSymbol = false;
+            this.gameState.playerWin = false;
+            this.gameState.playerTurn = true;
+            this.kingDraw(this.cards.playerCards);
+          }, 501);
           break;
         }
       }

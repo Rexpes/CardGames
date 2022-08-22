@@ -76,8 +76,9 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  margin-top: -15px;
 }
-.gameboard__talon {
+.gameboard__playground {
   width: 130px;
 }
 .gameboard__cardRow {
@@ -89,27 +90,7 @@
   position: absolute;
   right: 0px;
 }
-.gameboard__cardbox {
-  justify-content: center;
-  display: flex;
-  flex: 1;
-  margin-bottom: 10px;
-}
-.gameboard__cardbox .card-edge {
-  background-color: white;
-  padding: 8px;
-  margin-right: 10px;
-  border-radius: 10px;
-}
-.gameboard__cardbox .card-edge > .invisiblecard, .gameboard__cardbox .card-edge .visiblecard {
-  width: 112px;
-  height: 187px;
-  overflow: hidden;
-  background-image: url("/src/assets/images/card_rub.jpg");
-}
-.gameboard__cardbox .card-edge > .visiblecard {
-  background-image: url("/src/assets/images/Maumaucards.png");
-}
+
 *,
 html {
   margin: 0;
