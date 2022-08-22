@@ -86,6 +86,7 @@ export default {
       symbolPos: 0,
       gameState: {
         playerTurn: true,
+        opponentTurn: false,
         playerWin: false,
         opponentWin: false
       }
@@ -110,7 +111,7 @@ export default {
           if (!this.gameState.playerWin) {
               this.sevenDraw();
           }
-        }, 501);
+        }, 490);
       } else if (this.ace && card.value === 14) {
         this.gameState.playerTurn = false;
         this.playerCardAnimation(index);
@@ -122,7 +123,7 @@ export default {
           if (!this.gameState.playerWin) {
             this.opponentAceCheck();
           }
-        }, 501);
+        }, 490);
       } else if (this.king && card.value === 13 && card.cardType === 2) {
         this.gameState.playerTurn = false;
         this.playerCardAnimation(index);
@@ -133,7 +134,7 @@ export default {
           this.king = false;
           this.gameState.playerTurn = true;
           this.playerWinCheck();
-        }, 501);
+        }, 490);
       } else if ((lastPlayedCard.value === card.value || lastPlayedCard.cardType === card.cardType || card.value === 12) && !this.ace && !this.seven && !this.king) {
         this.gameState.playerTurn = false;
         this.playerCardAnimation(index);
@@ -164,7 +165,7 @@ export default {
           } else {
             this.opponentMove();
           }
-        }, 501);
+        }, 490);
       }
     },
 
@@ -184,22 +185,21 @@ export default {
         translateX: posX,
         translateY: posY,
         easing: 'easeInOutSine',
+        complete: function () {
+          anime({
+            targets: cardId,
+            duration: 0,
+            translateX: 0,
+            translateY: 0,
+          });
+        }
       });
-
-      setTimeout(() => {
-        anime({
-          targets: cardId,
-          duration: 0,
-          translateX: 0,
-          translateY: 0,
-        });
-      }, 502);
     },
 
     opponentMove() {
       this.playerWinCheck();
 
-      if (this.gameState.playerTurn || this.gameState.playerWin) {
+      if (this.gameState.playerTurn || this.gameState.playerWin || this.gameState.opponentTurn) {
         return;
       }
 
@@ -237,7 +237,7 @@ export default {
 
             this.opponentWinCheck();
             this.gameState.playerTurn = true;
-          }, 502);
+          }, 495);
           break;
         }
         i++;
@@ -249,7 +249,7 @@ export default {
 
           this.gameState.playerTurn = true;
         }
-      }, 503);
+      }, 496);
     },
 
     opponentCardAnimation(index) {
@@ -268,16 +268,15 @@ export default {
         translateX: posX,
         translateY: posY,
         easing: 'easeInOutSine',
-      });
-
-      setTimeout(() => {
-        anime({
+        complete: function () {
+          anime({
           targets: cardId,
-          duration: 0,
-          translateX: 0,
-          translateY: 0,
-        });
-      }, 502);
+            duration: 0,
+            translateX: 0,
+            translateY: 0,
+          });
+        }
+      });
     },
 
     drawCard() {
@@ -350,7 +349,7 @@ export default {
             this.cards.opponentCards.splice(i, 1);
             this.ace = true;
             this.opponentWinCheck();
-          }, 501);
+          }, 495);
           break;
         }
       }
@@ -372,7 +371,7 @@ export default {
             this.sevenNumberOfCards += 2;
             this.seven = true;
             this.gameState.playerTurn = true;
-          }, 501);
+          }, 490);
           break;
         }
       }
@@ -413,15 +412,20 @@ export default {
     opponentKingCheck() {
       for (let i = 0; i < this.cards.opponentCards.length; i++) {
         if (this.cards.opponentCards[i].value === 13 && this.cards.opponentCards[i].cardType === 2) {
+          this.gameState.opponentTurn = true;
+          this.sevenNumberOfCards = 0;
+          this.typeSymbol = false;
+          this.gameState.playerWin = false;
           this.opponentCardAnimation(i);
           setTimeout(() => {
             this.cards.playedCards.push(this.cards.opponentCards[i]);
             this.cards.opponentCards.splice(i, 1);
-            this.typeSymbol = false;
-            this.gameState.playerWin = false;
-            this.gameState.playerTurn = true;
             this.kingDraw(this.cards.playerCards);
-          }, 501);
+            this.gameState.opponentTurn = false;
+          }, 490);
+          setTimeout(() => {
+            this.opponentMove();
+          }, 990);
           break;
         }
       }
