@@ -32,6 +32,7 @@ export default {
     flex: 1;
     margin-top: 5px;
     margin-bottom: 5px;
+    margin-left: -60px;
 
     .card-edge {
       background-color: white;

@@ -2,14 +2,14 @@
   <div class="content">
     <div class="content__selection-box">
       <div class="gameboard">
-        <div class="gameboard__cardRow">
-          <div v-for="(card, index) in cards.opponentCards" :key="card.id" :id="index + 100">
+        <div class="gameboard__cardRowOpponentCards">
+          <div v-for="(card, index) in cards.opponentCards" :key="card.id" :id="index + 100" :style="{ 'z-index': index }">
             <Card :is-visible="false" :card="card" />
           </div>
         </div>
-        <div class="gameboard__cardRow">
+        <div class="gameboard__cardRowPlayground">
           <div class="gameboard__typeSymbol" :style="symbolPosition" v-if="typeSymbol"></div>
-          <div class="gameboard__playground" id="playground">
+          <div class="gameboard__playground" id="playground" style="z-index: -1;">
             <div v-for="card in cards.playedCards" :key="card.id">
               <Card style="position: absolute;" :is-visible="true" :card="card" />
             </div>
@@ -18,8 +18,8 @@
             <Card :is-visible="false" :card="cards.deck" />
           </div>
         </div>
-        <div class="gameboard__cardRow">
-          <div v-for="(card, index) in cards.playerCards" :key="index" :id="index" @click="playerMove(card, index)">
+        <div class="gameboard__cardRowPlayerCards">
+          <div v-for="(card, index) in cards.playerCards" :key="index" :id="index" @click="playerMove(card, index)" :style="{ 'z-index': index }">
             <Card :is-visible="true" :card="card" />
           </div>
         </div>
@@ -94,6 +94,7 @@ export default {
   },
 
   methods: {
+
     playerMove(card, index) {
       if (!this.gameState.playerTurn) return;
 
@@ -111,7 +112,7 @@ export default {
           if (!this.gameState.playerWin) {
               this.sevenDraw();
           }
-        }, 490);
+        }, 750);
       } else if (this.ace && card.value === 14) {
         this.gameState.playerTurn = false;
         this.playerCardAnimation(index);
@@ -123,7 +124,7 @@ export default {
           if (!this.gameState.playerWin) {
             this.opponentAceCheck();
           }
-        }, 490);
+        }, 750);
       } else if (this.king && card.value === 13 && card.cardType === 2) {
         this.gameState.playerTurn = false;
         this.playerCardAnimation(index);
@@ -134,7 +135,7 @@ export default {
           this.king = false;
           this.gameState.playerTurn = true;
           this.playerWinCheck();
-        }, 490);
+        }, 750);
       } else if ((lastPlayedCard.value === card.value || lastPlayedCard.cardType === card.cardType || card.value === 12) && !this.ace && !this.seven && !this.king) {
         this.gameState.playerTurn = false;
         this.playerCardAnimation(index);
@@ -165,7 +166,7 @@ export default {
           } else {
             this.opponentMove();
           }
-        }, 490);
+        }, 750);
       }
     },
 
@@ -181,7 +182,7 @@ export default {
 
       anime({
         targets: cardId,
-        duration: 500,
+        duration: 750,
         translateX: posX,
         translateY: posY,
         easing: 'easeInOutSine',
@@ -237,7 +238,7 @@ export default {
 
             this.opponentWinCheck();
             this.gameState.playerTurn = true;
-          }, 495);
+          }, 750);
           break;
         }
         i++;
@@ -249,7 +250,7 @@ export default {
 
           this.gameState.playerTurn = true;
         }
-      }, 496);
+      }, 751);
     },
 
     opponentCardAnimation(index) {
@@ -264,7 +265,7 @@ export default {
 
       anime({
         targets: cardId,
-        duration: 500,
+        duration: 750,
         translateX: posX,
         translateY: posY,
         easing: 'easeInOutSine',
@@ -349,13 +350,13 @@ export default {
             this.cards.opponentCards.splice(i, 1);
             this.ace = true;
             this.opponentWinCheck();
-          }, 495);
+          }, 751);
           break;
         }
       }
       setTimeout(() => {
         this.gameState.playerTurn = true;
-      }, 502);
+      }, 751);
     },
 
     sevenDraw() {
@@ -371,7 +372,7 @@ export default {
             this.sevenNumberOfCards += 2;
             this.seven = true;
             this.gameState.playerTurn = true;
-          }, 490);
+          }, 750);
           break;
         }
       }
@@ -422,10 +423,10 @@ export default {
             this.cards.opponentCards.splice(i, 1);
             this.kingDraw(this.cards.playerCards);
             this.gameState.opponentTurn = false;
-          }, 490);
+          }, 750);
           setTimeout(() => {
             this.opponentMove();
-          }, 990);
+          }, 1510);
           break;
         }
       }

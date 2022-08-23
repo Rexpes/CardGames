@@ -20,6 +20,7 @@
     line-height: 65px;
     display: flex;
     flex-wrap: nowrap;
+    z-index: 1000;
 
     &__logo {
         flex: 1;
