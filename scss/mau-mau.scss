@@ -1,4 +1,10 @@
 .gameboard {
+    @mixin card-row {
+        display: flex;
+        justify-content: center;
+        height: 215px;
+    }
+
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -7,12 +13,19 @@
 
     &__playground {
         width: 130px;
+        margin-left: 50px;
     }
 
-    &__cardRow {
-        display: flex;
-        justify-content: center;
-        height: 215px;
+    &__cardRowOpponentCards {
+        @include card-row;
+    }
+
+    &__cardRowPlayground {
+        @include card-row;
+    }
+
+    &__cardRowPlayerCards {
+        @include card-row;
     }
 
     &__deck {

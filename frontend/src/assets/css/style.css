@@ -11,6 +11,7 @@
   line-height: 65px;
   display: flex;
   flex-wrap: nowrap;
+  z-index: 1000;
 }
 .header__logo {
   flex: 1;
@@ -80,8 +81,19 @@
 }
 .gameboard__playground {
   width: 130px;
+  margin-left: 50px;
 }
-.gameboard__cardRow {
+.gameboard__cardRowOpponentCards {
+  display: flex;
+  justify-content: center;
+  height: 215px;
+}
+.gameboard__cardRowPlayground {
+  display: flex;
+  justify-content: center;
+  height: 215px;
+}
+.gameboard__cardRowPlayerCards {
   display: flex;
   justify-content: center;
   height: 215px;
