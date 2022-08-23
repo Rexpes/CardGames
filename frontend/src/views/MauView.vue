@@ -439,21 +439,6 @@ export default {
     }
   }
 }
-
-function getStyle(x,styleProp) {
-    let y;
-
-    if (window.getComputedStyle)
-    {
-        y = document.defaultView.getComputedStyle(x,null).getPropertyValue(styleProp);
-    }
-    else if (x.currentStyle)
-    {
-        y = x.currentStyle[styleProp];
-    }
-
-    return y;
-}
 </script>
 <style scoped lang="scss">
     .gameboard__typeSymbol {
