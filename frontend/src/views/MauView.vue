@@ -134,7 +134,7 @@ export default {
         setTimeout(() => {
           this.cards.playedCards.push(card);
           this.cards.playerCards.splice(index, 1);
-          this.kingDraw(this.cards.opponentCards);
+          this.kingDraw(this.cards.opponentCards, "opponent");
           this.king = false;
           this.gameState.playerTurn = true;
           this.playerWinCheck();
@@ -158,7 +158,7 @@ export default {
           } else if(card.value === 12) {
             this.queen = true;
           } else if (card.value === 13 && card.cardType === 2) {
-            this.kingDraw(this.cards.opponentCards);
+            this.kingDraw(this.cards.opponentCards, "opponent");
             this.gameState.playerTurn = true;
             this.playerWinCheck();
           } else if(card.value === 14) {
@@ -231,7 +231,7 @@ export default {
                 this.opponentChangeType(this.cards.opponentCards[0].cardType);
               }
             } else if (this.cards.opponentCards[i].value === 13 && this.cards.opponentCards[i].cardType === 2) {
-              this.kingDraw(this.cards.playerCards);
+              this.kingDraw(this.cards.playerCards, "player");
             } else if (this.cards.opponentCards[i].value === 14) {
               this.ace = true;
               this.gameState.playerTurn = false;
@@ -477,16 +477,24 @@ export default {
 
       if (!counterSeven) {
         for (let i = 0; i < this.sevenNumberOfCards; i++) {
-          this.takeCardFromDeck(this.cards.opponentCards);
+          let animDelay = i * 755;
+          setTimeout(() => {
+            this.takeCardFromDeck(this.cards.opponentCards, "opponent", (i * 50));
+          }, animDelay);
         }
-        this.sevenNumberOfCards = 0;
-        this.gameState.playerTurn = true;
+        setTimeout(() => {
+          this.sevenNumberOfCards = 0;
+          this.gameState.playerTurn = true;
+        }, (805*this.sevenNumberOfCards));
       }
     },
 
-    kingDraw(whichHandDraws) {
+    kingDraw(pushTo, hand) {
       for (let i = 0; i < 4; i++) {
-        this.takeCardFromDeck(whichHandDraws);
+        let animDelay = i * 755;
+        setTimeout(() => {
+          this.takeCardFromDeck(pushTo, hand, 0);
+        }, animDelay);
       }
     },
 
@@ -517,7 +525,7 @@ export default {
           setTimeout(() => {
             this.cards.playedCards.push(this.cards.opponentCards[i]);
             this.cards.opponentCards.splice(i, 1);
-            this.kingDraw(this.cards.playerCards);
+            this.kingDraw(this.cards.playerCards, "player");
             this.gameState.opponentTurn = false;
           }, 750);
           setTimeout(() => {
