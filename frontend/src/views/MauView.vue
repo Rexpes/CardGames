@@ -249,7 +249,7 @@ export default {
 
       setTimeout(() => {
         if (!this.gameState.playerTurn && !this.gameState.opponentWin) {
-          this.takeCardFromDeck(this.cards.opponentCards, "opponent")
+          this.takeCardFromDeck(this.cards.opponentCards, "opponent", 0)
 
         setTimeout(() => {
             this.gameState.playerTurn = true;
@@ -288,7 +288,7 @@ export default {
     drawCard() {
       if (this.gameState.playerTurn && !this.gameState.playerWin && !this.ace && !this.seven && !this.king) {
         this.gameState.playerTurn = false;
-        this.takeCardFromDeck(this.cards.playerCards, "player");
+        this.takeCardFromDeck(this.cards.playerCards, "player", 0);
 
         setTimeout(() => {
           this.opponentMove();
@@ -296,106 +296,109 @@ export default {
       } else if (this.gameState.playerTurn && !this.gameState.playerWin && !this.ace && !this.king) {
         this.gameState.playerTurn = false;
         for (let i = 0; i < this.sevenNumberOfCards; i++) {
-          this.takeCardFromDeck(this.cards.playerCards, "player");
+          let animDelay = i * 755;
+          setTimeout(() => {
+            this.takeCardFromDeck(this.cards.playerCards, "player", (i * 50));
+          }, animDelay);
         }
         setTimeout(() => {
           this.sevenNumberOfCards = 0;
           this.seven = false;
           this.opponentMove();
-        }, 750);
+        }, (805*this.sevenNumberOfCards));
       }
     },
 
-    takeCardFromDeck(pushTo, player) {
+    takeCardFromDeck(pushTo, player, animDelay) {
       if (this.cards.deck.length === 0) {
         this.shuffleNewDeck(this.cards.playedCards);
       }
-      this.drawAnimation(player);
+      this.drawAnimation(player, animDelay);
       setTimeout(() => {
         pushTo.push(this.cards.deck[0]);
         this.cards.deck.splice(this.cards.deck[0], 1);
-      }, 750);
+      }, (755+animDelay));
     },
 
-    drawAnimation(drawingHand) {
-      let drawingCardId = document.getElementById('drawingCard');
-      let drawingCardRect = drawingCardId.getBoundingClientRect();
+    drawAnimation(drawingHand, animDelay) {
+      setTimeout(() => {
+        let drawingCardId = document.getElementById('drawingCard');
+        let drawingCardRect = drawingCardId.getBoundingClientRect();
 
-      if (drawingHand == "player") {
-        let handPosId = document.getElementById(this.cards.playerCards.length-1);
+        if (drawingHand === "player") {
+          let handPosId = document.getElementById(this.cards.playerCards.length-1);
 
-        let handPosRect = handPosId.getBoundingClientRect();
+          let handPosRect = handPosId.getBoundingClientRect();
 
-        let posX = handPosRect.x - drawingCardRect.x + 39;
-        let posY = handPosRect.y - drawingCardRect.y;
+          let posX = handPosRect.x - drawingCardRect.x + 39;
+          let posY = handPosRect.y - drawingCardRect.y;
 
-        anime({
-          targets: drawingCardId,
-          duration: 750,
-          translateX: posX,
-          translateY: posY,
-          easing: 'easeInOutSine',
-          complete: function () {
-            anime({
-              targets: drawingCardId,
-              duration: 0,
-              translateX: 0,
-              translateY: 0,
-            });
-          }
-        });
-        anime({
-          targets: '.gameboard__cardRowPlayerCards',
-          duration: 750,
-          translateX: -39,
-          easing: 'easeInOutSine',
-          complete: function () {
-            anime({
-              targets: '.gameboard__cardRowPlayerCards',
-              duration: 0,
-              translateX: 0,
-              easing: 'easeInOutSine',
-            });
-          }
-        });
-      } else if(drawingHand == "opponent") {
-        let handPosId = document.getElementById(this.cards.opponentCards.length-1 + 100);
+          anime({
+            targets: drawingCardId,
+            duration: 750,
+            translateX: posX,
+            translateY: posY,
+            easing: 'easeInOutSine',
+            complete: function () {
+              anime({
+                targets: drawingCardId,
+                duration: 0,
+                translateX: 0,
+                translateY: 0,
+              });
+            }
+          });
+          anime({
+            targets: '.gameboard__cardRowPlayerCards',
+            duration: 750,
+            translateX: -39,
+            easing: 'easeInOutSine',
+            complete: function () {
+              anime({
+                targets: '.gameboard__cardRowPlayerCards',
+                duration: 0,
+                translateX: 0,
+              });
+            }
+          });
+        } else if(drawingHand === "opponent") {
+          let handPosId = document.getElementById(this.cards.opponentCards.length-1 + 100);
 
-        let handPosRect = handPosId.getBoundingClientRect();
+          let handPosRect = handPosId.getBoundingClientRect();
 
-        let posX = handPosRect.x - drawingCardRect.x + 39;
-        let posY = handPosRect.y - drawingCardRect.y;
+          let posX = handPosRect.x - drawingCardRect.x + 39;
+          let posY = handPosRect.y - drawingCardRect.y;
 
-        anime({
-          targets: drawingCardId,
-          duration: 750,
-          translateX: posX,
-          translateY: posY,
-          easing: 'easeInOutSine',
-          complete: function () {
-            anime({
-              targets: drawingCardId,
-              duration: 0,
-              translateX: 0,
-              translateY: 0,
-            });
-          }
-        });
-        anime({
-          targets: '.gameboard__cardRowOpponentCards',
-          duration: 750,
-          translateX: -39,
-          easing: 'easeInOutSine',
-          complete: function () {
-            anime({
-              targets: '.gameboard__cardRowOpponentCards',
-              duration: 0,
-              translateX: 0,
-              easing: 'easeInOutSine',
-            });
-          }
-        });
-      }
+          anime({
+            targets: drawingCardId,
+            duration: 750,
+            translateX: posX,
+            translateY: posY,
+            easing: 'easeInOutSine',
+            complete: function () {
+              anime({
+                targets: drawingCardId,
+                duration: 0,
+                translateX: 0,
+                translateY: 0,
+              });
+            }
+          });
+          anime({
+            targets: '.gameboard__cardRowOpponentCards',
+            duration: 750,
+            translateX: -39,
+            easing: 'easeInOutSine',
+            complete: function () {
+              anime({
+                targets: '.gameboard__cardRowOpponentCards',
+                duration: 0,
+                translateX: 0,
+              });
+            }
+          });
+        }
+      }, animDelay);
     },
 
     changeType(type) {
