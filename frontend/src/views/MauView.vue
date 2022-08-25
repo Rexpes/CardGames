@@ -14,7 +14,10 @@
               <Card style="position: absolute;" :is-visible="true" :card="card" />
             </div>
           </div>
-          <div class="gameboard__deck" @click="drawCard">
+          <div class="gameboard__deck" id="drawingCard" style="z-index: 500;">
+            <Card :is-visible="false" :card="cards.deck" />
+          </div>
+          <div class="gameboard__deck" @click="drawCard" style="z-index: 501;">
             <Card :is-visible="false" :card="cards.deck" />
           </div>
         </div>
@@ -246,9 +249,11 @@ export default {
 
       setTimeout(() => {
         if (!this.gameState.playerTurn && !this.gameState.opponentWin) {
-          this.takeCardFromDeck(this.cards.opponentCards)
+          this.takeCardFromDeck(this.cards.opponentCards, "opponent")
 
-          this.gameState.playerTurn = true;
+        setTimeout(() => {
+            this.gameState.playerTurn = true;
+        }, 750);
         }
       }, 751);
     },
@@ -282,27 +287,115 @@ export default {
 
     drawCard() {
       if (this.gameState.playerTurn && !this.gameState.playerWin && !this.ace && !this.seven && !this.king) {
-        this.takeCardFromDeck(this.cards.playerCards);
+        this.gameState.playerTurn = false;
+        this.takeCardFromDeck(this.cards.playerCards, "player");
 
-        this.gameState.playerTurn = false;
-        this.opponentMove();
+        setTimeout(() => {
+          this.opponentMove();
+        }, 750);
       } else if (this.gameState.playerTurn && !this.gameState.playerWin && !this.ace && !this.king) {
-        for (let i = 0; i < this.sevenNumberOfCards; i++) {
-          this.takeCardFromDeck(this.cards.playerCards);
-        }
-        this.sevenNumberOfCards = 0;
-        this.seven = false;
         this.gameState.playerTurn = false;
-        this.opponentMove();
+        for (let i = 0; i < this.sevenNumberOfCards; i++) {
+          this.takeCardFromDeck(this.cards.playerCards, "player");
+        }
+        setTimeout(() => {
+          this.sevenNumberOfCards = 0;
+          this.seven = false;
+          this.opponentMove();
+        }, 750);
       }
     },
 
-    takeCardFromDeck(pushTo) {
+    takeCardFromDeck(pushTo, player) {
       if (this.cards.deck.length === 0) {
         this.shuffleNewDeck(this.cards.playedCards);
       }
-      pushTo.push(this.cards.deck[0]);
-      this.cards.deck.splice(this.cards.deck[0], 1);
+      this.drawAnimation(player);
+      setTimeout(() => {
+        pushTo.push(this.cards.deck[0]);
+        this.cards.deck.splice(this.cards.deck[0], 1);
+      }, 750);
+    },
+
+    drawAnimation(drawingHand) {
+      let drawingCardId = document.getElementById('drawingCard');
+      let drawingCardRect = drawingCardId.getBoundingClientRect();
+
+      if (drawingHand == "player") {
+        let handPosId = document.getElementById(this.cards.playerCards.length-1);
+
+        let handPosRect = handPosId.getBoundingClientRect();
+
+        let posX = handPosRect.x - drawingCardRect.x + 39;
+        let posY = handPosRect.y - drawingCardRect.y;
+
+        anime({
+          targets: drawingCardId,
+          duration: 750,
+          translateX: posX,
+          translateY: posY,
+          easing: 'easeInOutSine',
+          complete: function () {
+            anime({
+              targets: drawingCardId,
+              duration: 0,
+              translateX: 0,
+              translateY: 0,
+            });
+          }
+        });
+        anime({
+          targets: '.gameboard__cardRowPlayerCards',
+          duration: 750,
+          translateX: -39,
+          easing: 'easeInOutSine',
+          complete: function () {
+            anime({
+              targets: '.gameboard__cardRowPlayerCards',
+              duration: 0,
+              translateX: 0,
+              easing: 'easeInOutSine',
+            });
+          }
+        });
+      } else if(drawingHand == "opponent") {
+        let handPosId = document.getElementById(this.cards.opponentCards.length-1 + 100);
+
+        let handPosRect = handPosId.getBoundingClientRect();
+
+        let posX = handPosRect.x - drawingCardRect.x + 39;
+        let posY = handPosRect.y - drawingCardRect.y;
+
+        anime({
+          targets: drawingCardId,
+          duration: 750,
+          translateX: posX,
+          translateY: posY,
+          easing: 'easeInOutSine',
+          complete: function () {
+            anime({
+              targets: drawingCardId,
+              duration: 0,
+              translateX: 0,
+              translateY: 0,
+            });
+          }
+        });
+        anime({
+          targets: '.gameboard__cardRowOpponentCards',
+          duration: 750,
+          translateX: -39,
+          easing: 'easeInOutSine',
+          complete: function () {
+            anime({
+              targets: '.gameboard__cardRowOpponentCards',
+              duration: 0,
+              translateX: 0,
+              easing: 'easeInOutSine',
+            });
+          }
+        });
+      }
     },
 
     changeType(type) {
