@@ -45,6 +45,9 @@
       <div class="gameboard__choosing-table" style="line-height: 150px;" v-if="seven">
         Bereš nebo hrej sedmičku!
       </div>
+      <div class="gameboard__choosing-table" style="line-height: 150px;" v-if="kingJustDraw">
+        Bereš 4 karty!
+      </div>
       <div class="gameboard__choosing-table" style="line-height: 150px;" v-if="gameState.playerWin">
         Vyhrál jsi!
       </div>
@@ -84,6 +87,7 @@ export default {
       ace: false,
       seven: false,
       king: false,
+      kingJustDraw: false,
       typeSymbol: false,
       sevenNumberOfCards: 0,
       symbolPos: 0,
@@ -141,7 +145,7 @@ export default {
             this.playerWinCheck();
           }, 3220);
         }, 750);
-      } else if ((lastPlayedCard.value === card.value || lastPlayedCard.cardType === card.cardType || card.value === 12) && !this.ace && !this.seven && !this.king) {
+      } else if ((lastPlayedCard.value === card.value || lastPlayedCard.cardType === card.cardType || card.value === 12) && !this.ace && !this.seven && !this.king && !this.kingJustDraw) {
         this.gameState.playerTurn = false;
         this.playerCardAnimation(index);
 
@@ -211,7 +215,6 @@ export default {
         return;
       }
 
-      let kingAnimationTime = 0;
       let i = 0;
       while (i < this.cards.opponentCards.length) {
         let lastPlayedCard = this.cards.playedCards[this.cards.playedCards.length-1];
@@ -236,11 +239,7 @@ export default {
                 this.opponentChangeType(this.cards.opponentCards[0].cardType);
               }
             } else if (this.cards.opponentCards[i].value === 13 && this.cards.opponentCards[i].cardType === 2) {
-              this.kingDraw(this.cards.playerCards, "player");
-              kingAnimationTime = 3220;
-              setTimeout(() => {
-                this.opponentMove();
-              }, kingAnimationTime);
+              this.kingJustDraw = true;
             } else if (this.cards.opponentCards[i].value === 14) {
               this.ace = true;
               this.gameState.playerTurn = false;
@@ -249,10 +248,7 @@ export default {
             this.cards.opponentCards.splice(i, 1);
 
             this.opponentWinCheck();
-            this.gameState.opponentTurn = false;
-            if(kingAnimationTime !== 3220) {
-              this.gameState.playerTurn = true;
-            }
+            this.gameState.playerTurn = true;
           }, 750);
           break;
         }
@@ -260,7 +256,7 @@ export default {
       }
 
       setTimeout(() => {
-        if (!this.gameState.playerTurn && !this.gameState.opponentWin && this.gameState.opponentTurn) {
+        if (!this.gameState.playerTurn && !this.gameState.opponentWin) {
           this.takeCardFromDeck(this.cards.opponentCards, "opponent", 0)
 
         setTimeout(() => {
@@ -298,15 +294,16 @@ export default {
     },
 
     drawCard() {
-      if (this.gameState.playerTurn && !this.gameState.playerWin && !this.ace && !this.seven && !this.king) {
+      if (this.gameState.playerTurn && !this.gameState.playerWin && !this.ace && !this.seven && !this.king && !this.kingJustDraw) {
         this.gameState.playerTurn = false;
         this.takeCardFromDeck(this.cards.playerCards, "player", 0);
 
         setTimeout(() => {
           this.opponentMove();
         }, 750);
-      } else if (this.gameState.playerTurn && !this.gameState.playerWin && !this.ace && !this.king) {
+      } else if (this.gameState.playerTurn && !this.gameState.playerWin && !this.ace && !this.king && !this.kingJustDraw) {
         this.gameState.playerTurn = false;
+        this.seven = false;
         for (let i = 0; i < this.sevenNumberOfCards; i++) {
           let animDelay = i * 755;
           setTimeout(() => {
@@ -315,9 +312,15 @@ export default {
         }
         setTimeout(() => {
           this.sevenNumberOfCards = 0;
-          this.seven = false;
           this.opponentMove();
         }, (805*this.sevenNumberOfCards));
+      } else if (this.gameState.playerTurn && !this.gameState.playerWin && this.kingJustDraw) {
+        this.gameState.playerTurn = false;
+        this.kingJustDraw = false;
+        this.kingDraw(this.cards.playerCards, "player");
+        setTimeout(() => {
+          this.opponentMove();
+        }, 3220);
       }
     },
 
