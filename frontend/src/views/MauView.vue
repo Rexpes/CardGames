@@ -129,15 +129,17 @@ export default {
           }
         }, 750);
       } else if (this.king && card.value === 13 && card.cardType === 2) {
+        this.king = false;
         this.gameState.playerTurn = false;
         this.playerCardAnimation(index);
         setTimeout(() => {
           this.cards.playedCards.push(card);
           this.cards.playerCards.splice(index, 1);
           this.kingDraw(this.cards.opponentCards, "opponent");
-          this.king = false;
-          this.gameState.playerTurn = true;
-          this.playerWinCheck();
+          setTimeout(() => {
+            this.gameState.playerTurn = true;
+            this.playerWinCheck();
+          }, 3220);
         }, 750);
       } else if ((lastPlayedCard.value === card.value || lastPlayedCard.cardType === card.cardType || card.value === 12) && !this.ace && !this.seven && !this.king) {
         this.gameState.playerTurn = false;
@@ -159,8 +161,10 @@ export default {
             this.queen = true;
           } else if (card.value === 13 && card.cardType === 2) {
             this.kingDraw(this.cards.opponentCards, "opponent");
-            this.gameState.playerTurn = true;
-            this.playerWinCheck();
+            setTimeout(() => {
+              this.gameState.playerTurn = true;
+              this.playerWinCheck();
+            }, 3220);
           } else if(card.value === 14) {
             this.playerWinCheck();
             if (!this.gameState.playerWin) {
@@ -207,6 +211,7 @@ export default {
         return;
       }
 
+      let kingAnimationTime = 0;
       let i = 0;
       while (i < this.cards.opponentCards.length) {
         let lastPlayedCard = this.cards.playedCards[this.cards.playedCards.length-1];
@@ -232,6 +237,10 @@ export default {
               }
             } else if (this.cards.opponentCards[i].value === 13 && this.cards.opponentCards[i].cardType === 2) {
               this.kingDraw(this.cards.playerCards, "player");
+              kingAnimationTime = 3220;
+              setTimeout(() => {
+                this.opponentMove();
+              }, kingAnimationTime);
             } else if (this.cards.opponentCards[i].value === 14) {
               this.ace = true;
               this.gameState.playerTurn = false;
@@ -240,7 +249,10 @@ export default {
             this.cards.opponentCards.splice(i, 1);
 
             this.opponentWinCheck();
-            this.gameState.playerTurn = true;
+            this.gameState.opponentTurn = false;
+            if(kingAnimationTime !== 3220) {
+              this.gameState.playerTurn = true;
+            }
           }, 750);
           break;
         }
@@ -248,7 +260,7 @@ export default {
       }
 
       setTimeout(() => {
-        if (!this.gameState.playerTurn && !this.gameState.opponentWin) {
+        if (!this.gameState.playerTurn && !this.gameState.opponentWin && this.gameState.opponentTurn) {
           this.takeCardFromDeck(this.cards.opponentCards, "opponent", 0)
 
         setTimeout(() => {
@@ -493,7 +505,7 @@ export default {
       for (let i = 0; i < 4; i++) {
         let animDelay = i * 755;
         setTimeout(() => {
-          this.takeCardFromDeck(pushTo, hand, 0);
+          this.takeCardFromDeck(pushTo, hand, (i * 50));
         }, animDelay);
       }
     },
@@ -530,7 +542,7 @@ export default {
           }, 750);
           setTimeout(() => {
             this.opponentMove();
-          }, 1510);
+          }, 4730);
           break;
         }
       }
