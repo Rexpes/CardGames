@@ -321,7 +321,7 @@ export default {
       let drawingCardId = document.getElementById('drawingCard');
       let drawingCardRect = drawingCardId.getBoundingClientRect();
 
-      if (drawingHand === "player") {
+      if (drawingHand == "player") {
         let handPosId = document.getElementById(this.cards.playerCards.length-1);
 
         let handPosRect = handPosId.getBoundingClientRect();
@@ -358,7 +358,7 @@ export default {
             });
           }
         });
-      } else if(drawingHand === "opponent") {
+      } else if(drawingHand == "opponent") {
         let handPosId = document.getElementById(this.cards.opponentCards.length-1 + 100);
 
         let handPosRect = handPosId.getBoundingClientRect();
