@@ -122,6 +122,7 @@ export default {
         }, 750);
       } else if (this.ace && card.value === 14) {
         this.gameState.playerTurn = false;
+        this.ace = false;
         this.playerCardAnimation(index);
         setTimeout(() => {
           this.cards.playedCards.push(card);
