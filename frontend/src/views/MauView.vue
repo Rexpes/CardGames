@@ -3,14 +3,14 @@
     <div class="content__selection-box">
       <div class="gameboard">
         <div class="gameboard__cardRowOpponentCards">
-          <div v-for="(card, index) in cards.opponentCards" :key="card.id" :id="index + 100" :style="{ 'z-index': index }">
+          <div v-for="(card, index) in cards.opponentCards" :key="card" :id="index + 100" :style="{ 'z-index': index }">
             <Card :is-visible="false" :card="card" />
           </div>
         </div>
         <div class="gameboard__cardRowPlayground">
           <div class="gameboard__typeSymbol" :style="symbolPosition" v-if="typeSymbol"></div>
           <div class="gameboard__playground" id="playground" style="z-index: -1;">
-            <div v-for="card in cards.playedCards" :key="card.id">
+            <div v-for="card in cards.playedCards" :key="card">
               <Card style="position: absolute;" :is-visible="true" :card="card" />
             </div>
           </div>
@@ -22,7 +22,7 @@
           </div>
         </div>
         <div class="gameboard__cardRowPlayerCards">
-          <div v-for="(card, index) in cards.playerCards" :key="index" :id="index" @click="playerMove(card, index)" :style="{ 'z-index': index }">
+          <div v-for="(card, index) in cards.playerCards" :key="card" :id="index" @click="playerMove(card, index)" :style="{ 'z-index': index }">
             <Card :is-visible="true" :card="card" />
           </div>
         </div>
@@ -198,14 +198,6 @@ export default {
         translateX: posX,
         translateY: posY,
         easing: 'easeInOutSine',
-        complete: function () {
-          anime({
-            targets: cardId,
-            duration: 0,
-            translateX: 0,
-            translateY: 0,
-          });
-        }
       });
     },
 
@@ -283,14 +275,6 @@ export default {
         translateX: posX,
         translateY: posY,
         easing: 'easeInOutSine',
-        complete: function () {
-          anime({
-          targets: cardId,
-            duration: 0,
-            translateX: 0,
-            translateY: 0,
-          });
-        }
       });
     },
 
@@ -556,7 +540,7 @@ export default {
   computed: {
     symbolPosition() {
         return 'background-position: ' + this.symbolPos + 'px 0;';
-    }
+    },
   }
 }
 </script>
