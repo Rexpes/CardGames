@@ -48,17 +48,17 @@
       <div class="gameboard__choosing-table" style="line-height: 150px;" v-if="kingJustDraw">
         Bereš 4 karty!
       </div>
-      <div class="gameboard__choosing-table" style="line-height: 150px;" v-if="gameState.playerWin">
-        Vyhrál jsi!
-      </div>
-      <div class="gameboard__choosing-table" style="line-height: 150px;" v-if="gameState.opponentWin">
-        Prohrál jsi!
-      </div>
       <div class="gameboard__choosing-table" v-if="king">
         Máš Zeleného Krále?
         <div style="display: flex; justify-content: center;">
           <div class="gameboard__ace-button" @click="kingToggle">Ne</div>
         </div>
+      </div>
+      <div class="gameboard__choosing-table" style="line-height: 150px;" v-if="gameState.playerWin">
+        Vyhrál jsi!
+      </div>
+      <div class="gameboard__choosing-table" style="line-height: 150px;" v-if="gameState.opponentWin">
+        Prohrál jsi!
       </div>
     </div>
   </div>
@@ -328,10 +328,20 @@ export default {
         if (drawingHand === "player") {
           let handPosId = document.getElementById(this.cards.playerCards.length-1);
 
-          let handPosRect = handPosId.getBoundingClientRect();
+          let posX;
+          let posY;
 
-          let posX = handPosRect.x - drawingCardRect.x + 39;
-          let posY = handPosRect.y - drawingCardRect.y;
+          if (handPosId !== null) {
+
+            let handPosRect = handPosId.getBoundingClientRect();
+
+            posX = handPosRect.x - drawingCardRect.x + 39;
+            posY = handPosRect.y - drawingCardRect.y;
+
+          } else {
+            posX = -417;
+            posY = 215;
+          }
 
           anime({
             targets: drawingCardId,
@@ -364,10 +374,20 @@ export default {
         } else if(drawingHand === "opponent") {
           let handPosId = document.getElementById(this.cards.opponentCards.length-1 + 100);
 
-          let handPosRect = handPosId.getBoundingClientRect();
+          let posX;
+          let posY;
 
-          let posX = handPosRect.x - drawingCardRect.x + 39;
-          let posY = handPosRect.y - drawingCardRect.y;
+          if (handPosId !== null) {
+
+            let handPosRect = handPosId.getBoundingClientRect();
+
+            posX = handPosRect.x - drawingCardRect.x + 39;
+            posY = handPosRect.y - drawingCardRect.y;
+
+          } else {
+            posX = -417;
+            posY = -215;
+          }
 
           anime({
             targets: drawingCardId,
@@ -525,11 +545,20 @@ export default {
           setTimeout(() => {
             this.cards.playedCards.push(this.cards.opponentCards[i]);
             this.cards.opponentCards.splice(i, 1);
-            this.kingDraw(this.cards.playerCards, "player");
-            this.gameState.opponentTurn = false;
+            this.opponentWinCheck();
+            if (!this.king) {
+              this.kingDraw(this.cards.playerCards, "player");
+              this.gameState.opponentTurn = false;
+            } else {
+              this.gameState.opponentWin = true;
+            }
           }, 750);
           setTimeout(() => {
-            this.opponentMove();
+            if (!this.king) {
+              this.opponentMove();
+            } else {
+              this.gameState.opponentWin = true;
+            }
           }, 4730);
           break;
         }
