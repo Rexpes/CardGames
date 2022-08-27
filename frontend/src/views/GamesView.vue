@@ -6,7 +6,7 @@
 import ContentSelection from '../components/ContentSelection'
 
 export default {
-    name: "HomeView",
+    name: "GamesView",
 
     components: {
         ContentSelection,
