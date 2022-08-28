@@ -597,8 +597,8 @@ export default {
         cursor: pointer;
     }
     .gameboard__choosing-table {
-        background-color: #245501;
-        color: #AAD576;
+        background-color: #F2EDD7FF;
+        color: #755139FF;
         position: absolute;
         font-size: 30px;
         padding: 20px;
@@ -609,8 +609,8 @@ export default {
         left: -250px;
     }
     .gameboard__ace-button {
-        background-color: #AAD576;
-        color: #143601;
+        background-color: #755139FF;
+        color: #D4B996FF;
         width: 80px;
         border-radius: 5px;
         margin-top: 40px;

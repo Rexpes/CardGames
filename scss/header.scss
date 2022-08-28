@@ -33,6 +33,7 @@
     &__button {
         @include button-view;
         background-color: $btn-color;
+        color: $text-color;
         width: 100px;
         height: 35px;
         margin: 0 20px;
@@ -49,5 +50,11 @@
 
     &__login {
         flex: 1;
+    }
+
+    &__Go4K-logo {
+        width: 160px;
+        margin-top: 8px;
+        cursor: pointer;
     }
 }
