@@ -1,8 +1,8 @@
 .header {
   position: fixed;
   z-index: 1;
-  background-color: #143601;
-  color: #AAD576;
+  background-color: #e3b587;
+  color: #CD7700;
   height: 75px;
   width: 100%;
   font-weight: bold;
@@ -24,7 +24,8 @@
   border-radius: 40px;
   font-weight: bold;
   cursor: pointer;
-  background-color: #73A942;
+  background-color: #755139;
+  color: #d4b996;
   width: 100px;
   height: 35px;
   margin: 0 20px;
@@ -34,8 +35,8 @@
   border-radius: 40px;
   font-weight: bold;
   cursor: pointer;
-  background-color: #AAD576;
-  color: #143601;
+  background-color: #CD7700;
+  color: #412525;
   font-size: 18px;
   width: 140px;
   height: 45px;
@@ -43,9 +44,14 @@
 .header__login {
   flex: 1;
 }
+.header__Go4K-logo {
+  width: 160px;
+  margin-top: 8px;
+  cursor: pointer;
+}
 
 .content {
-  color: #245501;
+  color: #d4b996;
   display: flex;
   justify-content: center;
   width: 100%;

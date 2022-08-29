@@ -1,6 +1,6 @@
 <template>
     <header class="header">
-        <div class="header__logo">Go4K</div>
+        <div class="header__logo"><router-link to="/"><img src="@/assets/images/Logo_Go4K.png" alt="Go4K_logo" class="header__Go4K-logo"></router-link></div>
         <div class="header__buttons">
             <router-link to="/"><button class="header__button">Domů</button></router-link>
             <!--<router-link to="/games"><button class="header__button">Hry</button></router-link>-->
