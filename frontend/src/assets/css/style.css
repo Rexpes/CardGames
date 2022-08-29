@@ -1,8 +1,8 @@
 .header {
   position: fixed;
   z-index: 1;
-  background-color: #8bc34a;
-  color: #33691e;
+  background-color: #763C2C;
+  color: #BA8052;
   height: 75px;
   width: 100%;
   font-weight: bold;
@@ -24,8 +24,8 @@
   border-radius: 40px;
   font-weight: bold;
   cursor: pointer;
-  background-color: #558b2f;
-  color: #ccff90;
+  background-color: #ECB069;
+  color: #431811;
   width: 100px;
   height: 35px;
   margin: 0 20px;
@@ -35,8 +35,8 @@
   border-radius: 40px;
   font-weight: bold;
   cursor: pointer;
-  background-color: #33691e;
-  color: #b2ff59;
+  background-color: #BA8052;
+  color: #431811;
   font-size: 18px;
   width: 140px;
   height: 45px;
@@ -51,7 +51,7 @@
 }
 
 .content {
-  color: #ccff90;
+  color: #431811;
   display: flex;
   justify-content: center;
   width: 100%;

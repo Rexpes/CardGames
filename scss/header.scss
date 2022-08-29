@@ -42,7 +42,7 @@
     &__sign-in {
         @include button-view;
         background-color: $btn2-color;
-        color: #b2ff59;
+        color: $text-color;
         font-size: 18px;
         width: 140px;
         height: 45px;
