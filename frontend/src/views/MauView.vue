@@ -597,7 +597,7 @@ export default {
         cursor: pointer;
     }
     .gameboard__choosing-table {
-        background-color: #F2EDD7FF;
+        background-color: #e3b587;
         color: #755139FF;
         position: absolute;
         font-size: 30px;
