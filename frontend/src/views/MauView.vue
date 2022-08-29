@@ -311,7 +311,12 @@ export default {
 
     takeCardFromDeck(pushTo, player, animDelay) {
       if (this.cards.deck.length === 0) {
-        this.shuffleNewDeck(this.cards.playedCards);
+        let cardsToShuffle = [];
+        for (let i = 0; i < this.cards.playedCards.length-1; i++) {
+            cardsToShuffle[i] = this.cards.playedCards[i];
+        }
+        this.shuffleNewDeck(cardsToShuffle);
+        this.cards.playedCards.splice(0, this.cards.playedCards.length-1);
       }
       this.drawAnimation(player, animDelay);
       setTimeout(() => {
@@ -437,10 +442,9 @@ export default {
 
     shuffleNewDeck(cardsToShuffle) {
       cardsToShuffle.sort(() => Math.random() - 0.5);
-      for (let i = 0; i < cardsToShuffle.length-2; i++) {
+      for (let i = 0; i < cardsToShuffle.length-1; i++) {
         this.cards.deck.push(cardsToShuffle[i]);
       }
-      this.cards.playedCards.splice(0, this.cards.playedCards.length-1);
     },
 
     aceToggle() {
@@ -597,8 +601,8 @@ export default {
         cursor: pointer;
     }
     .gameboard__choosing-table {
-        background-color: #e3b587;
-        color: #755139FF;
+        background-color: #8bc34a ;
+        color: #33691e;
         position: absolute;
         font-size: 30px;
         padding: 20px;
@@ -609,8 +613,8 @@ export default {
         left: -250px;
     }
     .gameboard__ace-button {
-        background-color: #755139FF;
-        color: #D4B996FF;
+        background-color: #33691e;
+        color: #b2ff59;
         width: 80px;
         border-radius: 5px;
         margin-top: 40px;
