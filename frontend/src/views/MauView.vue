@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <div class="content__selection-box">
+    <div class="content__selection-box" style="padding-bottom: 0px;">
       <div class="gameboard">
         <div class="gameboard__cardRowOpponentCards">
           <div v-for="(card, index) in cards.opponentCards" :key="card" :id="index + 100" :style="{ 'z-index': index }">
@@ -601,8 +601,8 @@ export default {
         cursor: pointer;
     }
     .gameboard__choosing-table {
-        background-color: #8bc34a ;
-        color: #33691e;
+        background-color: #763C2C;
+        color: #ECB069;
         position: absolute;
         font-size: 30px;
         padding: 20px;
@@ -613,8 +613,8 @@ export default {
         left: -250px;
     }
     .gameboard__ace-button {
-        background-color: #33691e;
-        color: #b2ff59;
+        background-color: #ECB069;
+        color: #763C2C;
         width: 80px;
         border-radius: 5px;
         margin-top: 40px;

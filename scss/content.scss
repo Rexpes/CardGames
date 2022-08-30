@@ -1,5 +1,9 @@
 @import 'colors';
 
+a {
+    text-decoration: none;
+}
+
 .content {
     color: $text-color;
     display: flex;
@@ -19,12 +23,14 @@
         flex-wrap: wrap;
 
         &__select {
-            background-color: rgb(255, 34, 207);
+            background-color: $text-color;
+            color: $btn-color;
             margin: 10px 20px 10px 20px;
             border-radius: 25px;
             height: 400px;
             width: 250px;
             line-height: 380px;
+            font-size: 40px;
             cursor: pointer;
         }
     }
