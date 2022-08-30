@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <div class="content__selection-box">
+    <div class="content__selection-box" style="padding-bottom: 0px;">
       <div class="gameboard">
         <div class="gameboard__cardRowOpponentCards">
           <div v-for="(card, index) in cards.opponentCards" :key="card" :id="index + 100" :style="{ 'z-index': index }">
