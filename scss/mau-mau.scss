@@ -1,51 +1,35 @@
 .gameboard {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-
-    &__talon {
-        width: 130px;
-    }
-
-    &__cardRow {
+    @mixin card-row {
         display: flex;
         justify-content: center;
         height: 215px;
     }
 
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: -15px;
+
+    &__playground {
+        width: 130px;
+        margin-left: 50px;
+    }
+
+    &__cardRowOpponentCards {
+        @include card-row;
+    }
+
+    &__cardRowPlayground {
+        @include card-row;
+    }
+
+    &__cardRowPlayerCards {
+        @include card-row;
+    }
+
     &__deck {
         position: absolute;
         right: 0px;
-    }
-
-    &__cardbox {
-        justify-content: center;
-        display: flex;
-        flex: 1;
-        margin-bottom: 10px;
-
-        .card-edge {
-            background-color: white;
-            padding: 8px;
-            margin-right: 10px;
-            border-radius: 10px;
-
-            > .invisiblecard, .visiblecard {
-                width: 112px;
-                height: 187px;
-                overflow: hidden;
-                background-image: url('/src/assets/images/card_rub.jpg');
-            }
-
-            > .visiblecard {
-                background-image: url('/src/assets/images/Maumaucards.png');
-            }
-
-            > .invisiblecard {
-                // TODO add back of card image
-                // background-image: url('../images/cardback.png');
-            }
-        }
     }
 }

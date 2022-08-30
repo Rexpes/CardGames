@@ -20,6 +20,7 @@
     line-height: 65px;
     display: flex;
     flex-wrap: nowrap;
+    z-index: 1000;
 
     &__logo {
         flex: 1;
@@ -32,6 +33,7 @@
     &__button {
         @include button-view;
         background-color: $btn-color;
+        color: $text-color;
         width: 100px;
         height: 35px;
         margin: 0 20px;
@@ -40,7 +42,7 @@
     &__sign-in {
         @include button-view;
         background-color: $btn2-color;
-        color: $bgc-color;
+        color: $text-color;
         font-size: 18px;
         width: 140px;
         height: 45px;
@@ -48,5 +50,11 @@
 
     &__login {
         flex: 1;
+    }
+
+    &__Go4K-logo {
+        width: 160px;
+        margin-top: 8px;
+        cursor: pointer;
     }
 }

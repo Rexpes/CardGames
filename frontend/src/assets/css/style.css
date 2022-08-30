@@ -1,8 +1,8 @@
 .header {
   position: fixed;
   z-index: 1;
-  background-color: #143601;
-  color: #AAD576;
+  background-color: #763C2C;
+  color: #BA8052;
   height: 75px;
   width: 100%;
   font-weight: bold;
@@ -11,6 +11,7 @@
   line-height: 65px;
   display: flex;
   flex-wrap: nowrap;
+  z-index: 1000;
 }
 .header__logo {
   flex: 1;
@@ -23,7 +24,8 @@
   border-radius: 40px;
   font-weight: bold;
   cursor: pointer;
-  background-color: #73A942;
+  background-color: #ECB069;
+  color: #431811;
   width: 100px;
   height: 35px;
   margin: 0 20px;
@@ -33,8 +35,8 @@
   border-radius: 40px;
   font-weight: bold;
   cursor: pointer;
-  background-color: #AAD576;
-  color: #143601;
+  background-color: #BA8052;
+  color: #431811;
   font-size: 18px;
   width: 140px;
   height: 45px;
@@ -42,9 +44,18 @@
 .header__login {
   flex: 1;
 }
+.header__Go4K-logo {
+  width: 160px;
+  margin-top: 8px;
+  cursor: pointer;
+}
+
+a {
+  text-decoration: none;
+}
 
 .content {
-  color: #245501;
+  color: #431811;
   display: flex;
   justify-content: center;
   width: 100%;
@@ -62,12 +73,14 @@
   flex-wrap: wrap;
 }
 .content__selection-box__select {
-  background-color: rgb(255, 34, 207);
+  background-color: #431811;
+  color: #ECB069;
   margin: 10px 20px 10px 20px;
   border-radius: 25px;
   height: 400px;
   width: 250px;
   line-height: 380px;
+  font-size: 40px;
   cursor: pointer;
 }
 
@@ -76,11 +89,23 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  margin-top: -15px;
 }
-.gameboard__talon {
+.gameboard__playground {
   width: 130px;
+  margin-left: 50px;
 }
-.gameboard__cardRow {
+.gameboard__cardRowOpponentCards {
+  display: flex;
+  justify-content: center;
+  height: 215px;
+}
+.gameboard__cardRowPlayground {
+  display: flex;
+  justify-content: center;
+  height: 215px;
+}
+.gameboard__cardRowPlayerCards {
   display: flex;
   justify-content: center;
   height: 215px;
@@ -89,27 +114,7 @@
   position: absolute;
   right: 0px;
 }
-.gameboard__cardbox {
-  justify-content: center;
-  display: flex;
-  flex: 1;
-  margin-bottom: 10px;
-}
-.gameboard__cardbox .card-edge {
-  background-color: white;
-  padding: 8px;
-  margin-right: 10px;
-  border-radius: 10px;
-}
-.gameboard__cardbox .card-edge > .invisiblecard, .gameboard__cardbox .card-edge .visiblecard {
-  width: 112px;
-  height: 187px;
-  overflow: hidden;
-  background-image: url("/src/assets/images/card_rub.jpg");
-}
-.gameboard__cardbox .card-edge > .visiblecard {
-  background-image: url("/src/assets/images/Maumaucards.png");
-}
+
 *,
 html {
   margin: 0;
