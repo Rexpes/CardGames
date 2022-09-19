@@ -492,12 +492,11 @@ export default {
             this.sevenNumberOfCards += 2;
             this.seven = true;
             this.gameState.playerTurn = true;
+            this.opponentWinCheck();
           }, 750);
           break;
         }
       }
-
-      this.opponentWinCheck();
 
       if (!counterSeven) {
         for (let i = 0; i < this.sevenNumberOfCards; i++) {
@@ -524,6 +523,7 @@ export default {
 
     opponentWinCheck() {
       if (this.cards.opponentCards.length === 0) {
+        this.gameState.playerTurn = false;
         this.king = true;
         this.ace = false;
         this.seven = false;
