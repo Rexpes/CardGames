@@ -36,25 +36,25 @@
           <div class="gameboard__type" style="background-position: 240px 0;" @click="changeType(3)"></div>
         </div>
       </div>
-      <div class="gameboard__choosing-table" v-if="ace">
+      <div class="gameboard__choosing-table" v-else-if="ace">
         Stojíš?
         <div style="display: flex; justify-content: center;">
           <div class="gameboard__button" @click="aceToggle">Ano</div>
         </div>
       </div>
-      <div class="gameboard__choosing-table" style="line-height: 150px;" v-if="seven">
+      <div class="gameboard__choosing-table" style="line-height: 150px;" v-else-if="seven">
         Bereš nebo hrej sedmičku!
       </div>
-      <div class="gameboard__choosing-table" style="line-height: 150px;" v-if="kingJustDraw">
+      <div class="gameboard__choosing-table" style="line-height: 150px;" v-else-if="kingJustDraw">
         Bereš 4 karty!
       </div>
-      <div class="gameboard__choosing-table" v-if="king">
+      <div class="gameboard__choosing-table" v-else-if="king">
         Máš Zeleného Krále?
         <div style="display: flex; justify-content: center;">
           <div class="gameboard__button" @click="kingToggle">Ne</div>
         </div>
       </div>
-      <GameOver :player-win="gameState.playerWin" :opponent-win="gameState.opponentWin" ref="resetGame"/>
+      <GameOver :player-win="gameState.playerWin" :opponent-win="gameState.opponentWin" @playAgain="playAgain"/>
     </div>
   </div>
 </template>
@@ -564,6 +564,14 @@ export default {
         }
       }
     },
+
+    playAgain() {
+      this.cards = Deck.generateDeck(32);
+      this.gameState.playerTurn = true;
+      this.gameState.playerWin = false;
+      this.gameState.opponentWin = false;
+      this.typeSymbol = false;
+    }
   },
 
   computed: {

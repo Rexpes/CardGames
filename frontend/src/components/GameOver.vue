@@ -1,16 +1,12 @@
 <template>
-  <div class="gameboard__choosing-table" v-if="playerWin">
-    Vyhrál jsi!
+  <div class="gameboard__choosing-table" v-if="playerWin || opponentWin">
+    <div class="text">
+      Vyhrál jsi!
+    </div>
     <div style="display: flex; justify-content: center;">
-      <div class="gameboard__button" @click="playAgain">Hrát znovu</div>
+      <div class="gameboard__button" @click="$emit('playAgain')">Hrát znovu</div>
     </div>
 </div>
-<div class="gameboard__choosing-table" v-if="opponentWin">
-    Prohrál jsi!
-    <div style="display: flex; justify-content: center;">
-      <div class="gameboard__button" @click="playAgain">Hrát znovu</div>
-    </div>
-  </div>
 </template>
 <script>
 export default {
@@ -20,13 +16,6 @@ export default {
     playerWin: Boolean,
     opponentWin: Boolean
   },
-
-  methods: {
-    playAgain() {
-      location.reload();
-    }
-  },
-
 }
 </script>
 <style scoped lang="scss">
@@ -35,7 +24,7 @@ export default {
     color: #ECB069;
     position: absolute;
     font-size: 30px;
-    padding: 35px 20px 0px 20px;
+    padding: 20px;
     border-radius: 15px;
     height: 150px;
     width: 400px;
@@ -47,7 +36,7 @@ export default {
     color: #763C2C;
     padding: 5px 15px 5px 15px;
     border-radius: 5px;
-    margin-top: 20px;
+    margin-top: 30px;
     cursor: pointer;
 }
 </style>
