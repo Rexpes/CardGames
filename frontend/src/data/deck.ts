@@ -11,9 +11,7 @@ export class Deck {
     private static cardRowValues = [7, 8, 9, 10, 11, 12, 13, 14];
     private static cardColumnTypes = [CardTypes.ACORNS, CardTypes.LEAVES, CardTypes.BELLS, CardTypes.HEARTS];
     private static cardWidth = 112;
-    private static maxCardWidth = 896;
     private static cardHeight = 187;
-    private static maxCardHeight = 748;
 
     static generateDeck(): Deck {
         this.alreadyGenerated = new Map();
