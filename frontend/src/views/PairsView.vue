@@ -1,15 +1,22 @@
 <template>
   <div class="content">
     <div class="content__selection-box">
-      <h1>PEXESO</h1>
+      <div v-for="(pair) in pairs" :key="pair">
+        <Pair :is-visible="true" :pair="pair" />
+      </div>
     </div>
   </div>
 </template>
 <script>
 import {Pairs} from "@/data/pairs";
+import Pair from "@/components/PairComponent";
 
 export default {
   name: "PairsView",
+
+  components: {
+    Pair
+  },
 
   data() {
     const pairs = Pairs.generatePairs();
