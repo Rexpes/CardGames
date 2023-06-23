@@ -1,7 +1,7 @@
 <template>
-  <div class="gameBoard__cardBox">
+  <div class="gameBoard__cardBox" @click="changeVisibility">
     <div class="card-edge">
-      <div :class="[isVisible ? 'visiblecard' : 'invisiblecard']" :style="pairImage"/>
+      <div :class="[visibility ? 'visiblecard' : 'invisiblecard']" :style="pairImage"/>
     </div>
   </div>
 </template>
@@ -11,14 +11,30 @@ export default {
   name: "PairComponent",
 
   props: {
-    isVisible: Boolean,
-    pair: Number
+    pair: Number,
+    playerTurn: Boolean,
+  },
+
+  data() {
+    return {
+        visibility: false
+    }
   },
 
   computed: {
     pairImage() {
       return {
         '--pairUrl': `url(${require('../assets/images/pairs/' + this.pair + '.png')})`
+      }
+    }
+  },
+
+  methods: {
+    changeVisibility() {
+      if (this.playerTurn === true) {
+        this.visibility = true;
+      } else {
+        this.visibility = false;
       }
     }
   }
@@ -29,14 +45,11 @@ export default {
     justify-content: center;
     display: flex;
     flex: 1;
-    margin-top: 5px;
-    margin-bottom: 5px;
 
     .card-edge {
       background-color: white;
       padding: 8px;
-      margin-right: 5px;
-      margin-left: 5px;
+      margin: 5px;
       border-radius: 10px;
 
       .invisiblecard, .visiblecard {
