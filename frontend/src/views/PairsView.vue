@@ -1,7 +1,7 @@
 <template>
   <div class="content">
     <div class="content__selection-box">
-      <div v-for="(pair, index) in pairs" :key="pair" @click="choosePairs(pair, index)">
+      <div v-for="(pair, index) in pairs" :key="index" @click="choosePairs(index)">
         <Pair :pair="pair" :playerTurn="playerTurnToggle"/>
       </div>
     </div>
@@ -28,32 +28,40 @@ export default {
       pairs: pairs,
       chosenPairs: [],
       lastChosenPair: Number,
-      playerTurnToggle: true
+      playerTurnToggle: true,
+      playerSwitch: true
     }
   },
 
   methods: {
-    choosePairs(pair, index) {
-      if (index !== this.lastChosenPair && this.playerTurnToggle) {
-        this.lastChosenPair = index;
-
-        this.chosenPairs.push(pair);
+    choosePairs(index) {
+      if (index !== this.chosenPairs[0] && this.playerTurnToggle) {
+        this.chosenPairs.push(index);
 
         if (this.chosenPairs.length > 1) {
           this.playerTurnToggle = false;
 
-          if (this.chosenPairs[0] === this.chosenPairs[1]) {
-            // TO DO add pairs to players array
+          if (this.pairs[this.chosenPairs[0]] === this.pairs[this.chosenPairs[1]]) {
+            if (this.playerSwitch) {
+              console.log("Player1 WON!");
+            } else {
+              console.log("Player2 WON!");
+            }
           }
         }
-      } else if (this.chosenPairs.length === 0) {
-        this.playerTurnToggle = true;
       } else {
-        let indexOfLastChosenPair = this.chosenPairs.indexOf(pair);
-
-        if (indexOfLastChosenPair !== -1) {
-          this.chosenPairs.splice(indexOfLastChosenPair, 1);
+        if (index === this.chosenPairs[0]) {
+          this.chosenPairs.splice(0, 1);
+        } else if (index === this.chosenPairs[1]) {
+          this.chosenPairs.splice(1, 1);
         }
+
+        if (this.chosenPairs.length === 0) {
+          this.playerTurnToggle = true;
+          this.playerSwitch = !this.playerSwitch;
+        }
+
+        console.log(this.playerSwitch);
       }
     }
   }
