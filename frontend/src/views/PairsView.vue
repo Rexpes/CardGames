@@ -50,9 +50,9 @@ export default {
           }
         }
       } else {
-        if (index === this.chosenPairs[0]) {
+        if (index === this.chosenPairs[0] && !this.playerTurnToggle) {
           this.chosenPairs.splice(0, 1);
-        } else if (index === this.chosenPairs[1]) {
+        } else if (index === this.chosenPairs[1] && !this.playerTurnToggle) {
           this.chosenPairs.splice(1, 1);
         }
 
