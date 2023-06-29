@@ -1,7 +1,7 @@
 <template>
   <div class="gameBoard__cardBox" @click="changeVisibility">
-    <div class="card-edge">
-      <div :class="[visibility ? 'visiblecard' : 'invisiblecard']" :style="pairImage"/>
+    <div class="card-edge" :style="{ visibility: visibleToHidden }">
+      <div :class="[visibility ? 'visiblecard' : 'invisiblecard']" :style="pairImage" />
     </div>
   </div>
 </template>
@@ -13,11 +13,14 @@ export default {
   props: {
     pair: Number,
     playerTurn: Boolean,
+    foundPair: Boolean,
+    foundPairValue: Number
   },
 
   data() {
     return {
-        visibility: false
+        visibility: false,
+        visibleToHidden: "visible"
     }
   },
 
@@ -35,6 +38,10 @@ export default {
         this.visibility = true;
       } else {
         this.visibility = false;
+      }
+
+      if (this.foundPair === true && this.foundPairValue === this.pair) {
+        this.visibleToHidden = "hidden";
       }
     }
   }

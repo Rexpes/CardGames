@@ -2,7 +2,7 @@
   <div class="content">
     <div class="content__selection-box">
       <div v-for="(pair, index) in pairs" :key="index" @click="choosePairs(index)">
-        <Pair :pair="pair" :playerTurn="playerTurnToggle"/>
+        <Pair :pair="pair" :playerTurn="playerTurnToggle" :foundPair="foundPair" :foundPairValue="foundPairValue" ref="visibilityValue"/>
       </div>
     </div>
   </div>
@@ -24,24 +24,30 @@ export default {
       localStorage.setItem('pairs', JSON.stringify(pairs));
     }
 
+
     return {
       pairs: pairs,
       chosenPairs: [],
       lastChosenPair: Number,
       playerTurnToggle: true,
-      playerSwitch: true
+      playerSwitch: true,
+      foundPair: false,
+      foundPairValue: -1,
     }
   },
 
   methods: {
     choosePairs(index) {
-      if (index !== this.chosenPairs[0] && this.playerTurnToggle) {
+      if (index !== this.chosenPairs[0] && this.playerTurnToggle && !this.foundPair && this.$refs.visibilityValue[index].visibleToHidden === "visible") {
         this.chosenPairs.push(index);
 
         if (this.chosenPairs.length > 1) {
           this.playerTurnToggle = false;
 
           if (this.pairs[this.chosenPairs[0]] === this.pairs[this.chosenPairs[1]]) {
+            this.foundPair = true;
+            this.foundPairValue = this.pairs[this.chosenPairs[0]];
+
             if (this.playerSwitch) {
               console.log("Player1 WON!");
             } else {
@@ -58,10 +64,9 @@ export default {
 
         if (this.chosenPairs.length === 0) {
           this.playerTurnToggle = true;
+          this.foundPair = false;
           this.playerSwitch = !this.playerSwitch;
         }
-
-        console.log(this.playerSwitch);
       }
     }
   }
