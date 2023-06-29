@@ -1,4 +1,14 @@
 <template>
+  <div class="gameStatus">
+    <div class="playerOne">
+        <div :style="playerSwitch ? {'fontWeight': 'bold'} : {}">Hráč 1</div>
+        Skóre: {{ this.playerOneScore }}
+    </div>
+    <div class="playerTwo">
+        <div :style="!playerSwitch ? {'fontWeight': 'bold'} : {}">Hráč 2</div>
+        Skóre: {{ this.playerTwoScore }}
+    </div>
+  </div>
   <div class="content">
     <div class="content__selection-box">
       <div v-for="(pair, index) in pairs" :key="index" @click="choosePairs(index)">
@@ -24,7 +34,6 @@ export default {
       localStorage.setItem('pairs', JSON.stringify(pairs));
     }
 
-
     return {
       pairs: pairs,
       chosenPairs: [],
@@ -33,6 +42,9 @@ export default {
       playerSwitch: true,
       foundPair: false,
       foundPairValue: -1,
+      playerOneScore: 0,
+      playerTwoScore: 0,
+      playerFontWeight: "medium"
     }
   },
 
@@ -49,9 +61,11 @@ export default {
             this.foundPairValue = this.pairs[this.chosenPairs[0]];
 
             if (this.playerSwitch) {
-              console.log("Player1 WON!");
+              this.playerOneScore++;
+              console.log("Player1 WON! - " + this.playerOneScore);
             } else {
-              console.log("Player2 WON!");
+              this.playerTwoScore++;
+              console.log("Player2 WON! - " + this.playerTwoScore);
             }
           }
         }
