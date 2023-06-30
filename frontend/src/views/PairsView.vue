@@ -55,7 +55,7 @@ export default {
 
   methods: {
     choosePairs(index) {
-      if (index !== this.chosenPairs[0] && this.playerTurnToggle && !this.foundPair && this.$refs.visibilityValue[index].visibleToHidden === "visible") {
+      if (index !== this.chosenPairs[0] && this.playerTurnToggle && this.$refs.visibilityValue[index].visibleToHidden === "visible") {
         this.chosenPairs.push(index);
 
         if (this.chosenPairs.length > 1) {
@@ -91,9 +91,9 @@ export default {
             }
           }
 
-          if (this.$refs.visibilityValue[index].visibleToHidden === "visible") {
-            this.playerTurnToggle = true;
+          if (this.$refs.visibilityValue[index].visibleToHidden === "visible" || (this.foundPair && this.chosenPairs.length === 0)) {
             this.foundPair = false;
+            this.playerTurnToggle = true;
             this.playerSwitch = !this.playerSwitch;
           }
         }
