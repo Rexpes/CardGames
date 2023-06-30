@@ -70,6 +70,8 @@ export default {
             } else {
               this.playerTwoScore++;
             }
+          } else {
+            this.foundPair = false;
           }
         }
       } else {
@@ -91,8 +93,9 @@ export default {
             }
           }
 
-          if (this.$refs.visibilityValue[index].visibleToHidden === "visible" || (this.foundPair && this.chosenPairs.length === 0)) {
-            this.foundPair = false;
+          if (this.foundPair && this.chosenPairs.length === 0) {
+            this.playerTurnToggle = true;
+          } else if (this.$refs.visibilityValue[index].visibleToHidden === "visible") {
             this.playerTurnToggle = true;
             this.playerSwitch = !this.playerSwitch;
           }
