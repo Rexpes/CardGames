@@ -36,36 +36,32 @@
           <div class="gameboard__type" style="background-position: 240px 0;" @click="changeType(3)"></div>
         </div>
       </div>
-      <div class="gameboard__choosing-table" v-if="ace">
+      <div class="gameboard__choosing-table" v-else-if="ace">
         Stojíš?
         <div style="display: flex; justify-content: center;">
-          <div class="gameboard__ace-button" @click="aceToggle">Ano</div>
+          <div class="gameboard__button" @click="aceToggle">Ano</div>
         </div>
       </div>
-      <div class="gameboard__choosing-table" style="line-height: 150px;" v-if="seven">
+      <div class="gameboard__choosing-table" style="line-height: 150px;" v-else-if="seven">
         Bereš nebo hrej sedmičku!
       </div>
-      <div class="gameboard__choosing-table" style="line-height: 150px;" v-if="kingJustDraw">
+      <div class="gameboard__choosing-table" style="line-height: 150px;" v-else-if="kingJustDraw">
         Bereš 4 karty!
       </div>
-      <div class="gameboard__choosing-table" v-if="king">
+      <div class="gameboard__choosing-table" v-else-if="king">
         Máš Zeleného Krále?
         <div style="display: flex; justify-content: center;">
-          <div class="gameboard__ace-button" @click="kingToggle">Ne</div>
+          <div class="gameboard__button" @click="kingToggle">Ne</div>
         </div>
       </div>
-      <div class="gameboard__choosing-table" style="line-height: 150px;" v-if="gameState.playerWin">
-        Vyhrál jsi!
-      </div>
-      <div class="gameboard__choosing-table" style="line-height: 150px;" v-if="gameState.opponentWin">
-        Prohrál jsi!
-      </div>
+      <GameOver :player-win="gameState.playerWin" :opponent-win="gameState.opponentWin" @playAgain="playAgain"/>
     </div>
   </div>
 </template>
 <script>
 import {Deck} from "@/data/deck";
 import Card from "@/components/CardComponent";
+import GameOver from "@/components/GameOver";
 import anime from 'animejs';
 
 export default {
@@ -73,6 +69,7 @@ export default {
 
   components: {
     Card,
+    GameOver
   },
 
   data() {
@@ -101,7 +98,6 @@ export default {
   },
 
   methods: {
-
     playerMove(card, index) {
       if (!this.gameState.playerTurn) return;
 
@@ -568,6 +564,14 @@ export default {
         }
       }
     },
+
+    playAgain() {
+      this.cards = Deck.generateDeck(32);
+      this.gameState.playerTurn = true;
+      this.gameState.playerWin = false;
+      this.gameState.opponentWin = false;
+      this.typeSymbol = false;
+    }
   },
 
   computed: {
@@ -612,7 +616,7 @@ export default {
         top: 220px;
         left: -250px;
     }
-    .gameboard__ace-button {
+    .gameboard__button {
         background-color: #ECB069;
         color: #763C2C;
         width: 80px;
