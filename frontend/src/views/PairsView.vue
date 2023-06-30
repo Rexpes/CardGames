@@ -1,10 +1,10 @@
 <template>
   <div class="gameStatus">
-    <div class="playerOne">
+    <div class="gameStatus__playerOne">
         <div :style="playerSwitch ? {'fontWeight': 'bold'} : {}">Hráč 1</div>
         Skóre: {{ this.playerOneScore }}
     </div>
-    <div class="playerTwo">
+    <div class="gameStatus__playerTwo">
         <div :style="!playerSwitch ? {'fontWeight': 'bold'} : {}">Hráč 2</div>
         Skóre: {{ this.playerTwoScore }}
     </div>
@@ -16,6 +16,10 @@
       </div>
     </div>
   </div>
+  <div class="gameboard__choosing-table" v-if="gameEnd">
+    {{ this.winner }}
+    <div class="gameboard__button" @click="playAgain">Hrát znovu?</div>
+  </div>
 </template>
 <script>
 import {Pairs} from "@/data/pairs";
@@ -25,7 +29,7 @@ export default {
   name: "PairsView",
 
   components: {
-    Pair
+    Pair,
   },
 
   data() {
@@ -41,10 +45,11 @@ export default {
       playerTurnToggle: true,
       playerSwitch: true,
       foundPair: false,
+      gameEnd: false,
       foundPairValue: -1,
       playerOneScore: 0,
       playerTwoScore: 0,
-      playerFontWeight: "medium"
+      winner: String
     }
   },
 
@@ -62,10 +67,8 @@ export default {
 
             if (this.playerSwitch) {
               this.playerOneScore++;
-              console.log("Player1 WON! - " + this.playerOneScore);
             } else {
               this.playerTwoScore++;
-              console.log("Player2 WON! - " + this.playerTwoScore);
             }
           }
         }
@@ -77,12 +80,62 @@ export default {
         }
 
         if (this.chosenPairs.length === 0) {
-          this.playerTurnToggle = true;
-          this.foundPair = false;
-          this.playerSwitch = !this.playerSwitch;
+          if (this.playerOneScore + this.playerTwoScore === 12) {
+            this.gameEnd = true;
+            if (this.playerOneScore > this.playerTwoScore) {
+                this.winner = "Vyhrál hráč 1!";
+            } else if(this.playerOneScore < this.playerTwoScore) {
+                this.winner = "Vyhrál hráč 2!";
+            } else {
+                this.winner = "Remíza!";
+            }
+          }
+
+          if (this.$refs.visibilityValue[index].visibleToHidden === "visible") {
+            this.playerTurnToggle = true;
+            this.foundPair = false;
+            this.playerSwitch = !this.playerSwitch;
+          }
         }
       }
+    },
+
+    playAgain() {
+      this.pairs.splice(0, this.pairs.length);
+      this.pairs = Pairs.generatePairs();
+      for (let i = 0; i < this.pairs.length; i++) {
+        this.$refs.visibilityValue[i].visibility = false;
+        this.$refs.visibilityValue[i].visibleToHidden = "visible";
+      }
+      this.playerTurnToggle = true;
+      this.playerSwitch = true;
+      this.playerOneScore = 0;
+      this.playerTwoScore = 0;
+      this.gameEnd = false;
     }
   }
 }
 </script>
+<style scoped lang="scss">
+.gameboard__choosing-table {
+    background-color: #763C2C;
+    color: #ECB069;
+    position: absolute;
+    text-align: center;
+    font-size: 30px;
+    padding: 20px;
+    border-radius: 15px;
+    height: 150px;
+    width: 400px;
+    top: 220px;
+    left: 35.5%;
+}
+.gameboard__button {
+    background-color: #ECB069;
+    color: #763C2C;
+    padding: 5px 15px 5px 15px;
+    border-radius: 5px;
+    margin-top: 30px;
+    cursor: pointer;
+}
+</style>

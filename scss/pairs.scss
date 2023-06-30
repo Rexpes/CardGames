@@ -6,12 +6,12 @@
     font-size: 35px;
     line-height: 55px;
 
-    .playerOne {
+    &__playerOne {
         flex: 1;
         padding-left: 25px;
     }
 
-    .playerTwo {
+    &__playerTwo {
         flex: 1;
         padding-right: 25px;
         text-align: right;

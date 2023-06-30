@@ -123,11 +123,11 @@ a {
   font-size: 35px;
   line-height: 55px;
 }
-.gameStatus .playerOne {
+.gameStatus__playerOne {
   flex: 1;
   padding-left: 25px;
 }
-.gameStatus .playerTwo {
+.gameStatus__playerTwo {
   flex: 1;
   padding-right: 25px;
   text-align: right;
